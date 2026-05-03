@@ -2,47 +2,61 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>周贤的画</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; background:#faf8f5; color:#3d3d3d; }
+body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; background:#faf8f5; color:#3d3d3d; -webkit-tap-highlight-color:transparent; }
 
 /* 密码门 */
-#gate { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:2rem; }
-#gate h1 { font-size:2rem; font-weight:400; color:#8b7e6a; margin-bottom:2rem; letter-spacing:4px; }
-#gate input { border:1px solid #d4c8b8; border-radius:8px; padding:12px 20px; font-size:1.1rem; width:240px; text-align:center; outline:none; background:#fffdf9; color:#5a4e3c; letter-spacing:6px; }
+#gate { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; min-height:100dvh; padding:2rem; }
+#gate h1 { font-size:clamp(1.5rem,4vw,2rem); font-weight:400; color:#8b7e6a; margin-bottom:2rem; letter-spacing:4px; }
+#gate input { border:1px solid #d4c8b8; border-radius:8px; padding:14px 20px; font-size:1.1rem; width:220px; text-align:center; outline:none; background:#fffdf9; color:#5a4e3c; letter-spacing:6px; -webkit-appearance:none; }
 #gate input:focus { border-color:#b8a48e; }
-#gate button { margin-top:1rem; border:none; background:#8b7e6a; color:#fff; padding:10px 32px; border-radius:8px; font-size:1rem; cursor:pointer; letter-spacing:2px; }
-#gate button:hover { background:#6d6252; }
+#gate button { margin-top:1rem; border:none; background:#8b7e6a; color:#fff; padding:12px 36px; border-radius:8px; font-size:1rem; cursor:pointer; letter-spacing:2px; -webkit-appearance:none; }
+#gate button:active { background:#6d6252; }
 #gate .hint { margin-top:1.5rem; font-size:0.85rem; color:#b5a794; }
 
 /* 画册 */
-#gallery { display:none; padding:2rem; max-width:1100px; margin:0 auto; }
-#gallery header { text-align:center; margin-bottom:3rem; }
-#gallery header h1 { font-size:1.8rem; font-weight:400; color:#8b7e6a; letter-spacing:6px; }
-#gallery header p { font-size:0.9rem; color:#b5a794; margin-top:0.5rem; }
+#gallery { display:none; padding:1.5rem; max-width:1100px; margin:0 auto; }
+#gallery header { text-align:center; margin-bottom:2rem; }
+#gallery header h1 { font-size:clamp(1.4rem,4vw,1.8rem); font-weight:400; color:#8b7e6a; letter-spacing:6px; }
+#gallery header p { font-size:0.85rem; color:#b5a794; margin-top:0.3rem; }
 
-.paintings { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:1.5rem; }
+.toolbar { text-align:right; margin-bottom:1rem; }
+.toolbar button { border:1px solid #d4c8b8; background:#fffdf9; color:#8b7e6a; padding:8px 18px; border-radius:6px; font-size:0.85rem; cursor:pointer; }
+.toolbar button:active { background:#f0ebe0; }
 
-.painting { background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.04); transition:transform 0.2s; cursor:pointer; }
-.painting:hover { transform:translateY(-2px); }
+.paintings { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:0.8rem; }
+.painting { background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.03); cursor:pointer; }
+.painting:active { transform:scale(0.98); }
 .painting img { width:100%; display:block; aspect-ratio:4/3; object-fit:cover; }
-.painting .info { padding:1rem; }
-.painting .info .title { font-size:0.95rem; color:#5a4e3c; }
-.painting .info .date { font-size:0.8rem; color:#b5a794; margin-top:0.3rem; }
 
 /* 弹窗 */
-#lightbox { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.9); z-index:999; align-items:center; justify-content:center; flex-direction:column; }
-#lightbox img { max-width:92vw; max-height:80vh; border-radius:6px; }
-#lightbox .close { position:absolute; top:20px;right:30px; color:#ccc; font-size:2rem; cursor:pointer; }
-#lightbox .caption { color:#ccc; margin-top:1rem; font-size:0.9rem; }
+#lightbox { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.92); z-index:999; align-items:center; justify-content:center; flex-direction:column; }
+#lightbox img { max-width:95vw; max-height:80vh; border-radius:4px; }
+#lightbox .close { position:absolute; top:16px;right:24px; color:#ccc; font-size:2rem; cursor:pointer; z-index:1000; }
+#lightbox .nav { position:absolute; top:50%; transform:translateY(-50%); color:#ccc; font-size:2.5rem; cursor:pointer; padding:16px; user-select:none; }
+#lightbox .prev { left:8px; }
+#lightbox .next { right:8px; }
+#lightbox .counter { color:#888; font-size:0.85rem; margin-top:0.8rem; }
 
-footer { text-align:center; padding:3rem 0 2rem; color:#c5b8a4; font-size:0.8rem; }
+/* 上传区 */
+#upload-zone { display:none; margin-top:2rem; padding:1.5rem; background:#fffdf9; border-radius:10px; border:1px dashed #d4c8b8; text-align:center; }
+#upload-zone input[type=file] { display:none; }
+#upload-zone label { display:inline-block; background:#8b7e6a; color:#fff; padding:10px 28px; border-radius:8px; font-size:0.95rem; cursor:pointer; }
+#upload-zone label:active { background:#6d6252; }
+#upload-zone .status { margin-top:1rem; font-size:0.85rem; color:#b5a794; }
+
+footer { text-align:center; padding:2.5rem 0 1.5rem; color:#c5b8a4; font-size:0.8rem; }
 
 @media (max-width:600px) {
-  .paintings { grid-template-columns:1fr; }
+  .paintings { grid-template-columns:repeat(2,1fr); gap:0.5rem; }
   #gallery { padding:1rem; }
+  .painting { border-radius:8px; }
+}
+@media (min-width:900px) {
+  .paintings { grid-template-columns:repeat(4,1fr); }
 }
 </style>
 </head>
@@ -62,69 +76,190 @@ footer { text-align:center; padding:3rem 0 2rem; color:#c5b8a4; font-size:0.8rem
     <h1>周贤的画</h1>
     <p>画在，人在，时光在。</p>
   </header>
-  <div class="paintings" id="container">
-    <div class="painting" onclick="openLightbox('images/01.png')"><img src="images/01.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/02.png')"><img src="images/02.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/03.png')"><img src="images/03.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/04.png')"><img src="images/04.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/05.png')"><img src="images/05.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/06.png')"><img src="images/06.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/07.png')"><img src="images/07.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/08.png')"><img src="images/08.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/09.png')"><img src="images/09.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/10.png')"><img src="images/10.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/11.png')"><img src="images/11.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/12.png')"><img src="images/12.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/13.png')"><img src="images/13.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/14.png')"><img src="images/14.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/15.png')"><img src="images/15.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/16.png')"><img src="images/16.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/17.png')"><img src="images/17.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/18.png')"><img src="images/18.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/19.png')"><img src="images/19.png" alt=""></div>
-    <div class="painting" onclick="openLightbox('images/20.png')"><img src="images/20.png" alt=""></div>
+  <div class="toolbar">
+    <button onclick="toggleUpload()">＋</button>
   </div>
+  <div class="paintings" id="container"></div>
+
+  <!-- 上传区 -->
+  <div id="upload-zone">
+    <p style="color:#8b7e6a;margin-bottom:1rem;">添加新画</p>
+    <input type="file" id="fileInput" accept="image/*" onchange="uploadPainting()">
+    <label for="fileInput">选择照片</label>
+    <p class="status" id="uploadStatus"></p>
+  </div>
+
   <footer>— 一间安静的画室 —</footer>
 </div>
 
 <!-- 弹窗 -->
-<div id="lightbox" onclick="closeLightbox()">
-  <span class="close">&times;</span>
-  <img id="lb-img" src="" alt="">
-  <p class="caption" id="lb-caption"></p>
+<div id="lightbox" onclick="closeLightbox(event)">
+  <span class="close" onclick="closeLightbox()">&times;</span>
+  <span class="nav prev" onclick="event.stopPropagation();navLightbox(-1)">‹</span>
+  <span class="nav next" onclick="event.stopPropagation();navLightbox(1)">›</span>
+  <img id="lb-img" src="" alt="" onclick="event.stopPropagation()">
+  <p class="counter" id="lb-counter"></p>
 </div>
 
 <script>
 const CORRECT = '0603';
+const REPO = 'rita911018/zhou-xian';
+const BRANCH = 'gh-pages';
+let currentIdx = 0;
+let paintings = [];
 
+// ====== 密码 ======
 function unlock() {
   if (document.getElementById('pw').value === CORRECT) {
     document.getElementById('gate').style.display = 'none';
     document.getElementById('gallery').style.display = 'block';
     sessionStorage.setItem('zx_unlocked', '1');
+    loadPaintings();
   } else {
     document.getElementById('pw').style.borderColor = '#c97878';
     setTimeout(() => document.getElementById('pw').style.borderColor = '#d4c8b8', 600);
   }
 }
-
-function openLightbox(src, title, date) {
-  document.getElementById('lightbox').style.display = 'flex';
-  document.getElementById('lb-img').src = src;
-  document.getElementById('lb-caption').textContent = (title || '') + (date ? ' · ' + date : '');
-}
-function closeLightbox() {
-  document.getElementById('lightbox').style.display = 'none';
-}
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
-
 document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
-
-// 自动解锁（同一会话）
 if (sessionStorage.getItem('zx_unlocked') === '1') {
   document.getElementById('gate').style.display = 'none';
   document.getElementById('gallery').style.display = 'block';
+  loadPaintings();
 }
+
+// ====== 加载画作 ======
+async function loadPaintings() {
+  try {
+    const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/images?ref=${BRANCH}`);
+    if (!resp.ok) { loadStaticFallback(); return; }
+    const files = await resp.json();
+    paintings = files.filter(f => f.name.match(/\.(png|jpg|jpeg|webp)$/i)).sort((a,b) => b.name.localeCompare(a.name));
+    renderPaintings();
+  } catch(e) {
+    loadStaticFallback();
+  }
+}
+
+function loadStaticFallback() {
+  // 硬编码的 20 幅画作为兜底
+  const imgs = [];
+  for (let i = 20; i >= 1; i--) imgs.push({ name: `${String(i).padStart(2,'0')}.png`, download_url: `images/${String(i).padStart(2,'0')}.png` });
+  paintings = imgs;
+  renderPaintings();
+}
+
+function renderPaintings() {
+  const c = document.getElementById('container');
+  c.innerHTML = paintings.map((p, i) => 
+    `<div class="painting" onclick="openLightbox(${i})"><img src="${p.download_url || p.name}" alt="" loading="lazy"></div>`
+  ).join('');
+}
+
+// ====== 弹窗 ======
+function openLightbox(idx) {
+  currentIdx = idx;
+  const lb = document.getElementById('lightbox');
+  lb.style.display = 'flex';
+  updateLightbox();
+  document.body.style.overflow = 'hidden';
+}
+function updateLightbox() {
+  document.getElementById('lb-img').src = paintings[currentIdx].download_url || paintings[currentIdx].name;
+  document.getElementById('lb-counter').textContent = `${currentIdx + 1} / ${paintings.length}`;
+}
+function navLightbox(dir) {
+  currentIdx = (currentIdx + dir + paintings.length) % paintings.length;
+  updateLightbox();
+}
+function closeLightbox(e) {
+  if (e && e.target !== document.getElementById('lightbox') && e.target.className === 'close') {}
+  document.getElementById('lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (document.getElementById('lightbox').style.display === 'flex') {
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') navLightbox(-1);
+    if (e.key === 'ArrowRight') navLightbox(1);
+  }
+});
+
+// ====== 上传 ======
+function toggleUpload() {
+  const zone = document.getElementById('upload-zone');
+  zone.style.display = zone.style.display === 'none' ? 'block' : 'none';
+}
+
+async function uploadPainting() {
+  const file = document.getElementById('fileInput').files[0];
+  if (!file) return;
+  
+  const status = document.getElementById('uploadStatus');
+  status.textContent = '上传中...';
+  
+  try {
+    // 转 base64
+    const reader = new FileReader();
+    reader.onload = async function() {
+      const base64 = reader.result.split(',')[1];
+      const ts = new Date().toISOString().slice(0,10).replace(/-/g,'');
+      const filename = `images/${ts}-${Date.now().toString(36)}.png`;
+      
+      const token = 'TOKEN_PLACEHOLDER'; // 需要替换为 GitHub token
+      
+      // 先获取当前所有画作列表
+      const listResp = await fetch(`https://api.github.com/repos/${REPO}/contents/images?ref=${BRANCH}`, {
+        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      
+      let htmlResp = await fetch(`https://api.github.com/repos/${REPO}/contents/index.html?ref=${BRANCH}`, {
+        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      let htmlData = await htmlResp.json();
+      let htmlContent = atob(htmlData.content);
+      let htmlSha = htmlData.sha;
+      
+      // 上传图片
+      const imgResp = await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `添加画作 ${filename}`, content: base64, branch: BRANCH })
+      });
+      
+      if (imgResp.ok) {
+        // 更新 HTML 中的画作列表
+        const newEntry = `\n    <div class="painting" onclick="openLightbox('${filename}')\\"><img src="${filename}" alt="">\\u003C/div>`;
+        htmlContent = htmlContent.replace('</div>\n  <footer>', `${newEntry}\n  </div>\n  <footer>`);
+        
+        await fetch(`https://api.github.com/repos/${REPO}/contents/index.html`, {
+          method: 'PUT',
+          headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: `更新画廊 ${filename}`, content: btoa(unescape(encodeURIComponent(htmlContent))), sha: htmlSha, branch: BRANCH })
+        });
+        
+        status.textContent = '上传成功！刷新页面查看。';
+        status.style.color = '#6b8e6a';
+        setTimeout(() => location.reload(), 2000);
+      } else {
+        const err = await imgResp.json();
+        status.textContent = '上传失败：' + (err.message || '未知错误');
+        status.style.color = '#c97878';
+      }
+    };
+    reader.readAsDataURL(file);
+  } catch(e) {
+    status.textContent = '出错了：' + e.message;
+    status.style.color = '#c97878';
+  }
+}
+
+// ====== 触摸滑动弹窗 ======
+let touchStartX = 0;
+document.getElementById('lightbox').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.getElementById('lightbox').addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 60) navLightbox(diff > 0 ? 1 : -1);
+});
 </script>
 </body>
 </html>
