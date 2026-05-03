@@ -69,6 +69,7 @@ footer { text-align:center; padding:2.5rem 0 1.5rem; color:#c5b8a4; font-size:0.
 
 <!-- 密码门 -->
 <div id="gate">
+  <img src="portrait-sketch.png" alt="" style="width:120px; height:auto; border-radius:50%; margin-bottom:1.5rem; opacity:0.85;">
   <h1>周贤的画</h1>
   <input type="password" id="pw" placeholder="密码" maxlength="6" autofocus>
   <button onclick="unlock()">进入</button>
@@ -157,9 +158,9 @@ async function loadPaintings() {
 }
 
 function loadStaticFallback() {
-  // 19 幅画作为兜底
+  // 20 幅画作为兜底
   const imgs = [];
-  for (let i = 19; i >= 1; i--) imgs.push({ name: `${String(i).padStart(2,'0')}.png`, download_url: `images/${String(i).padStart(2,'0')}.png` });
+  for (let i = 20; i >= 1; i--) imgs.push({ name: `${String(i).padStart(2,'0')}.png`, download_url: `images/${String(i).padStart(2,'0')}.png` });
   paintings = imgs;
   renderPaintings();
 }
