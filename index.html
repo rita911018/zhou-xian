@@ -158,11 +158,12 @@ if (sessionStorage.getItem('zx_unlocked') === '1') {
 // ====== 加载画作 ======
 async function loadPaintings() {
   try {
-    const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/images?ref=${BRANCH}`);
-    if (!resp.ok) { loadStaticFallback(); return; }
+    const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/images?ref=${BRANCH}&t=${Date.now()}`);
+    if (!resp.ok) throw new Error('API error');
     const files = await resp.json();
     paintings = files.filter(f => f.name.match(/\.(png|jpg|jpeg|webp)$/i)).sort((a,b) => b.name.localeCompare(a.name));
   } catch(e) {
+    console.log('Falling back to static list');
     loadStaticFallback();
   }
   if (!paintings.length) loadStaticFallback();
