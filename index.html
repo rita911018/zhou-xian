@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>周贤的画</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; background:#faf8f5; color:#3d3d3d; }
+
+/* 密码门 */
+#gate { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:2rem; }
+#gate h1 { font-size:2rem; font-weight:400; color:#8b7e6a; margin-bottom:2rem; letter-spacing:4px; }
+#gate input { border:1px solid #d4c8b8; border-radius:8px; padding:12px 20px; font-size:1.1rem; width:240px; text-align:center; outline:none; background:#fffdf9; color:#5a4e3c; letter-spacing:6px; }
+#gate input:focus { border-color:#b8a48e; }
+#gate button { margin-top:1rem; border:none; background:#8b7e6a; color:#fff; padding:10px 32px; border-radius:8px; font-size:1rem; cursor:pointer; letter-spacing:2px; }
+#gate button:hover { background:#6d6252; }
+#gate .hint { margin-top:1.5rem; font-size:0.85rem; color:#b5a794; }
+
+/* 画册 */
+#gallery { display:none; padding:2rem; max-width:1100px; margin:0 auto; }
+#gallery header { text-align:center; margin-bottom:3rem; }
+#gallery header h1 { font-size:1.8rem; font-weight:400; color:#8b7e6a; letter-spacing:6px; }
+#gallery header p { font-size:0.9rem; color:#b5a794; margin-top:0.5rem; }
+
+.paintings { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:1.5rem; }
+
+.painting { background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.04); transition:transform 0.2s; cursor:pointer; }
+.painting:hover { transform:translateY(-2px); }
+.painting img { width:100%; display:block; aspect-ratio:4/3; object-fit:cover; }
+.painting .info { padding:1rem; }
+.painting .info .title { font-size:0.95rem; color:#5a4e3c; }
+.painting .info .date { font-size:0.8rem; color:#b5a794; margin-top:0.3rem; }
+
+/* 弹窗 */
+#lightbox { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.9); z-index:999; align-items:center; justify-content:center; flex-direction:column; }
+#lightbox img { max-width:92vw; max-height:80vh; border-radius:6px; }
+#lightbox .close { position:absolute; top:20px;right:30px; color:#ccc; font-size:2rem; cursor:pointer; }
+#lightbox .caption { color:#ccc; margin-top:1rem; font-size:0.9rem; }
+
+footer { text-align:center; padding:3rem 0 2rem; color:#c5b8a4; font-size:0.8rem; }
+
+@media (max-width:600px) {
+  .paintings { grid-template-columns:1fr; }
+  #gallery { padding:1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- 密码门 -->
+<div id="gate">
+  <h1>周贤的画</h1>
+  <input type="password" id="pw" placeholder="密码" maxlength="6" autofocus>
+  <button onclick="unlock()">进入</button>
+  <p class="hint">一间安静的画室</p>
+</div>
+
+<!-- 画册 -->
+<div id="gallery">
+  <header>
+    <h1>周贤的画</h1>
+    <p>画在，人在，时光在。</p>
+  </header>
+  <div class="paintings" id="container">
+    <!-- 画作由 Cola 自动添加 -->
+  </div>
+  <footer>— 一间安静的画室 —</footer>
+</div>
+
+<!-- 弹窗 -->
+<div id="lightbox" onclick="closeLightbox()">
+  <span class="close">&times;</span>
+  <img id="lb-img" src="" alt="">
+  <p class="caption" id="lb-caption"></p>
+</div>
+
+<script>
+const CORRECT = '0603';
+
+function unlock() {
+  if (document.getElementById('pw').value === CORRECT) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('gallery').style.display = 'block';
+    sessionStorage.setItem('zx_unlocked', '1');
+  } else {
+    document.getElementById('pw').style.borderColor = '#c97878';
+    setTimeout(() => document.getElementById('pw').style.borderColor = '#d4c8b8', 600);
+  }
+}
+
+function openLightbox(src, title, date) {
+  document.getElementById('lightbox').style.display = 'flex';
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lb-caption').textContent = (title || '') + (date ? ' · ' + date : '');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
+
+// 自动解锁（同一会话）
+if (sessionStorage.getItem('zx_unlocked') === '1') {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('gallery').style.display = 'block';
+}
+</script>
+</body>
+</html>
