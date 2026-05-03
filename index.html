@@ -171,7 +171,7 @@ async function loadPaintings() {
 
 function loadStaticFallback() {
   paintings = [];
-  for (let i = 39; i >= 1; i--) paintings.push({ name: `${String(i).padStart(2,'0')}.png`, download_url: `images/${String(i).padStart(2,'0')}.png` });
+  for (let i = 36; i >= 1; i--) paintings.push({ name: `${String(i).padStart(2,'0')}.png`, download_url: `images/${String(i).padStart(2,'0')}.png` });
 }
 
 function renderGallery() {
