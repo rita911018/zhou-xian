@@ -9,32 +9,26 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; background:#faf8f5; color:#3d3d3d; -webkit-tap-highlight-color:transparent; overflow:hidden; }
 
-/* 密码门 */
 #gate { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; min-height:100dvh; padding:2rem; }
 #gate img.portrait { width:100px; height:auto; border-radius:50%; margin-bottom:1.5rem; opacity:0.85; }
-#gate h1 { font-size:clamp(1.8rem,5vw,2.4rem); font-weight:200; font-family:'Noto Serif SC', 'PingFang SC', serif; color:#8b7e6a; margin-bottom:2rem; letter-spacing:6px; }
+#gate h1 { font-size:clamp(1.8rem,5vw,2.4rem); font-weight:200; font-family:'Noto Serif SC','PingFang SC',serif; color:#8b7e6a; margin-bottom:2rem; letter-spacing:6px; }
 #gate input { border:1px solid #d4c8b8; border-radius:8px; padding:14px 20px; font-size:1.1rem; width:220px; text-align:center; outline:none; background:#fffdf9; color:#5a4e3c; letter-spacing:6px; -webkit-appearance:none; }
 #gate input:focus { border-color:#b8a48e; }
 #gate button { margin-top:1rem; border:none; background:#8b7e6a; color:#fff; padding:12px 36px; border-radius:8px; font-size:1rem; cursor:pointer; letter-spacing:2px; -webkit-appearance:none; }
 #gate button:active { background:#6d6252; }
-#gate .hint { margin-top:1.5rem; font-size:0.85rem; color:#b5a794; }
 
-/* 画廊（幻灯片模式） */
 #gallery { display:none; position:fixed; top:0; left:0; width:100%; height:100%; height:100dvh; background:#faf8f5; }
 #gallery .header { position:absolute; top:0; left:0; right:0; z-index:10; text-align:center; padding:1rem 1rem 0; pointer-events:none; }
-#gallery .header h1 { font-size:1.2rem; font-weight:200; font-family:'Noto Serif SC', 'PingFang SC', serif; color:#8b7e6a; letter-spacing:6px; }
+#gallery .header h1 { font-size:1.2rem; font-weight:200; font-family:'Noto Serif SC','PingFang SC',serif; color:#8b7e6a; letter-spacing:6px; }
 
 .slides { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
 .slide { position:absolute; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:50px 16px calc(70px + env(safe-area-inset-bottom, 0px)); opacity:0; transition:opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1); pointer-events:none; }
 .slide.active { opacity:1; pointer-events:auto; }
 .slide img { max-width:100%; max-height:68vh; max-height:68dvh; object-fit:contain; border-radius:6px; box-shadow:0 4px 24px rgba(0,0,0,0.08); }
 .slide .page-num { position:absolute; bottom:60px; left:0; right:0; text-align:center; font-size:0.75rem; color:#b5a794; letter-spacing:2px; }
-
-/* 暂停指示 */
 .pause-indicator { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#8b7e6a; font-size:2rem; opacity:0; transition:opacity 0.3s; pointer-events:none; z-index:5; }
 .pause-indicator.show { opacity:0.6; }
 
-/* 底部 */
 .bottom-bar { position:absolute; bottom:0; left:0; right:0; height:64px; display:flex; align-items:center; justify-content:center; gap:6px; padding:0 8px 0; padding-bottom:env(safe-area-inset-bottom, 0); z-index:10; background:rgba(250,248,245,0.95); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
 .bottom-bar button { border:1px solid #d4c8b8; background:#fffdf9; color:#8b7e6a; padding:5px 10px; border-radius:16px; font-size:0.75rem; cursor:pointer; line-height:1; white-space:nowrap; flex-shrink:0; }
 .bottom-bar button:active { background:#f0ebe0; }
@@ -42,33 +36,29 @@ body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-seri
 .bottom-bar .dot { width:5px; height:5px; border-radius:50%; background:#d4c8b8; transition:all 0.3s; }
 .bottom-bar .dot.active { background:#8b7e6a; width:14px; border-radius:3px; }
 .bottom-bar .spacer { flex:0 0 auto; width:8px; }
+#musicBtn { width:30px; height:30px; border-radius:50% !important; padding:0 !important; display:flex; align-items:center; justify-content:center; }
 
-#musicBtn { width:30px; height:30px; border-radius:50% !important; padding:0 !important; display:flex; align-items:center; justify-content:center; font-size:1rem; }
-
-/* 全部查看（网格模式） */
 #gridView { display:none; position:fixed; top:0;left:0;width:100%;height:100%;height:100dvh;background:#faf8f5;z-index:20;overflow-y:auto;padding:1rem; }
 #gridView .grid-header { display:flex; align-items:center; justify-content:space-between; padding:0.5rem 0 1rem; }
-#gridView .grid-header h1 { font-size:1.2rem; font-weight:200; font-family:'Noto Serif SC', 'PingFang SC', serif; color:#8b7e6a; letter-spacing:6px; }
+#gridView .grid-header h1 { font-size:1.2rem; font-weight:200; font-family:'Noto Serif SC','PingFang SC',serif; color:#8b7e6a; letter-spacing:6px; }
 #gridView .grid-header button { border:1px solid #d4c8b8; background:#fffdf9; color:#8b7e6a; padding:6px 14px; border-radius:20px; font-size:0.8rem; cursor:pointer; }
-#gridView .grid-header button:active { background:#f0ebe0; }
 .grid-paintings { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:0.6rem; padding-bottom:2rem; }
 .grid-paintings .gp { background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.03); cursor:pointer; }
 .grid-paintings .gp:active { transform:scale(0.97); }
 .grid-paintings .gp img { width:100%; display:block; aspect-ratio:4/3; object-fit:cover; }
 
-@media (min-width:600px) { .grid-paintings { grid-template-columns:repeat(4,1fr); } }
-
-/* 全屏 */
 #lightbox { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.94); z-index:999; align-items:center; justify-content:center; flex-direction:column; }
 #lightbox img { max-width:96vw; max-height:88vh; border-radius:4px; }
 #lightbox .lb-close { position:absolute; top:16px;right:24px; color:#ccc; font-size:2rem; cursor:pointer; z-index:1000; }
 
-#musicPlayer { display:none; }
+@media (min-width:600px) { .grid-paintings { grid-template-columns:repeat(4,1fr); } }
+@media (min-width:768px) { .slide img { max-height:75vh; max-width:60vw; } }
+
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
 </style>
 </head>
 <body>
 
-<!-- 密码门 -->
 <div id="gate">
   <img class="portrait" src="portrait-avatar.png?v=2" alt="">
   <h1>周贤的画室</h1>
@@ -76,12 +66,9 @@ body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-seri
   <button onclick="unlock()">进入</button>
 </div>
 
-<!-- 画廊（幻灯片模式） -->
 <div id="gallery">
   <div class="header"><h1>周贤的画室</h1></div>
-  <div class="slides" id="slides">
-    <div class="pause-indicator" id="pauseIcon">⏸</div>
-  </div>
+  <div class="slides" id="slides"><div class="pause-indicator" id="pauseIcon">⏸</div></div>
   <div class="bottom-bar">
     <button onclick="prevSlide(); resetAuto()">◂</button>
     <div class="dots" id="dots"></div>
@@ -95,10 +82,9 @@ body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-seri
     </button>
     <button onclick="showGrid()">查看全部</button>
   </div>
-  <div id="musicPlayer"><audio id="bgm" src="music.mp3" loop></audio></div>
+  <audio id="bgm" src="music.mp3" loop preload="none"></audio>
 </div>
 
-<!-- 网格视图 -->
 <div id="gridView">
   <div class="grid-header">
     <h1>周贤的画室</h1>
@@ -107,25 +93,15 @@ body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-seri
   <div class="grid-paintings" id="gridContainer"></div>
 </div>
 
-<!-- 全屏 -->
 <div id="lightbox" onclick="closeLightbox()">
   <span class="lb-close">&times;</span>
   <img id="lb-img" src="" alt="">
 </div>
 
 <script>
-const CORRECT = '0603';
-const REPO = 'rita911018/zhou-xian';
-const BRANCH = 'gh-pages';
-let currentIdx = 0;
-let paintings = [];
-let musicOn = false;
-let autoTimer = null;
-let autoPaused = false;
-let lastManualTime = 0;
-const AUTO_INTERVAL = 6000; // 6秒自动翻页
-const RESUME_DELAY = 2000;  // 2秒无操作恢复
-
+const CORRECT = '0603', TOTAL = 36;
+let currentIdx = 0, paintings = [], musicOn = false, autoTimer = null, autoPaused = false, lastManualTime = 0;
+const AUTO_INTERVAL = 6000, RESUME_DELAY = 2000;
 let touchStartX = 0, touchStartY = 0;
 
 // ====== 密码 ======
@@ -138,13 +114,7 @@ function unlock() {
     setTimeout(() => toggleMusic(), 600);
   } else {
     document.getElementById('pw').style.borderColor = '#c97878';
-    document.getElementById('pwHint').textContent = '密码不对，再试一次';
-    document.getElementById('pwHint').style.color = '#c97878';
-    setTimeout(() => {
-      document.getElementById('pw').style.borderColor = '#d4c8b8';
-      document.getElementById('pwHint').textContent = '一间安静的画室';
-      document.getElementById('pwHint').style.color = '#b5a794';
-    }, 2000);
+    setTimeout(() => document.getElementById('pw').style.borderColor = '#d4c8b8', 2000);
   }
 }
 document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
@@ -155,20 +125,20 @@ if (sessionStorage.getItem('zx_unlocked') === '1') {
   setTimeout(() => toggleMusic(), 800);
 }
 
-// ====== 加载画作 ======
+// ====== 加载 ======
 function loadPaintings() {
+  // 直接构造静态列表，不调 API —— 最快
   paintings = [];
-  for (let i = 36; i >= 1; i--) paintings.push({ 
-    thumb: `thumbs/${String(i).padStart(2,'0')}.jpg`, 
-    full: `images/${String(i).padStart(2,'0')}.png` 
-  });
+  for (let i = TOTAL; i >= 1; i--) {
+    const n = String(i).padStart(2, '0');
+    paintings.push({ thumb: `thumbs/${n}.jpg`, full: `images/${n}.png` });
+  }
   renderGallery();
 }
 
 function renderGallery() {
   const slides = document.getElementById('slides');
   const dots = document.getElementById('dots');
-  // Keep pause icon
   const pauseIcon = slides.querySelector('.pause-indicator');
   slides.innerHTML = '';
   slides.appendChild(pauseIcon);
@@ -176,13 +146,11 @@ function renderGallery() {
     const div = document.createElement('div');
     div.className = `slide${i === 0 ? ' active' : ''}`;
     div.setAttribute('data-idx', i);
-    div.innerHTML = `<img src="${p.thumb}" alt="" loading="${i < 3 ? 'eager' : 'lazy'}"><div class="page-num">${i + 1} / ${paintings.length}</div>`;
+    div.innerHTML = `<img src="${p.thumb}" alt="" loading="${i < 3 ? 'eager' : 'lazy'}"><div class="page-num">${i + 1} / ${TOTAL}</div>`;
     div.addEventListener('click', (e) => toggleAutoPause(e));
     slides.appendChild(div);
   });
-  dots.innerHTML = paintings.map((_, i) => 
-    `<div class="dot${i === 0 ? ' active' : ''}"></div>`
-  ).join('');
+  dots.innerHTML = paintings.map((_, i) => `<div class="dot${i === 0 ? ' active' : ''}"></div>`).join('');
   currentIdx = 0;
   startAuto();
 }
@@ -190,106 +158,59 @@ function renderGallery() {
 // ====== 幻灯片 ======
 function goSlide(idx) {
   if (idx < 0 || idx >= paintings.length) return;
-  const slides = document.querySelectorAll('#slides .slide');
-  slides.forEach(s => s.classList.remove('active'));
-  slides[idx].classList.add('active');
-  const dots = document.querySelectorAll('#dots .dot');
-  dots.forEach(d => d.classList.remove('active'));
-  dots[idx].classList.add('active');
+  document.querySelectorAll('#slides .slide').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('#slides .slide')[idx].classList.add('active');
+  document.querySelectorAll('#dots .dot').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('#dots .dot')[idx].classList.add('active');
   currentIdx = idx;
 }
 function nextSlide() { goSlide((currentIdx + 1) % paintings.length); }
 function prevSlide() { goSlide((currentIdx - 1 + paintings.length) % paintings.length); }
 
-// ====== 自动播放 ======
-function startAuto() {
-  stopAuto();
-  autoTimer = setInterval(() => {
-    if (!autoPaused) nextSlide();
-  }, AUTO_INTERVAL);
-}
-function stopAuto() {
-  clearInterval(autoTimer);
-  autoTimer = null;
-}
+function startAuto() { stopAuto(); autoTimer = setInterval(() => { if (!autoPaused) nextSlide(); }, AUTO_INTERVAL); }
+function stopAuto() { clearInterval(autoTimer); autoTimer = null; }
 function toggleAutoPause(e) {
   if (e) e.stopPropagation();
   autoPaused = !autoPaused;
   document.getElementById('pauseIcon').classList.toggle('show', autoPaused);
   lastManualTime = Date.now();
-  if (!autoPaused) checkAutoResume();
 }
-function resetAuto() {
-  lastManualTime = Date.now();
-  if (autoPaused) {
-    // Manual action while paused - keep paused, but reset timer for resume
-  } else {
-    // Restart interval so manual action doesn't immediately get overridden
-    stopAuto(); startAuto();
-  }
-}
-function checkAutoResume() {
-  if (!autoPaused) return;
-  const elapsed = Date.now() - lastManualTime;
-  if (elapsed >= RESUME_DELAY) {
-    autoPaused = false;
-    document.getElementById('pauseIcon').classList.remove('show');
-  } else {
-    setTimeout(checkAutoResume, 500);
-  }
-}
-
-// 手动操作后监控恢复
-function monitorResume() {
-  lastManualTime = Date.now();
-  setTimeout(checkAutoResume, RESUME_DELAY + 100);
-}
+function resetAuto() { lastManualTime = Date.now(); stopAuto(); startAuto(); }
 
 // 触摸
 document.addEventListener('DOMContentLoaded', () => {
-  const gallery = document.getElementById('gallery');
-  gallery.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; });
-  gallery.addEventListener('touchend', e => {
+  const g = document.getElementById('gallery');
+  g.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; });
+  g.addEventListener('touchend', e => {
     const dx = touchStartX - e.changedTouches[0].clientX;
     const dy = touchStartY - e.changedTouches[0].clientY;
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
       dx > 0 ? nextSlide() : prevSlide();
       resetAuto();
-      monitorResume();
     }
   });
 });
-
 document.addEventListener('keydown', e => {
-  if (document.getElementById('lightbox').style.display === 'flex') return;
-  if (document.getElementById('gridView').style.display === 'block') return;
-  if (e.key === 'ArrowRight') { nextSlide(); resetAuto(); monitorResume(); }
-  if (e.key === 'ArrowLeft') { prevSlide(); resetAuto(); monitorResume(); }
-  if (e.key === ' ') { e.preventDefault(); resetAuto(); }
+  if (e.key === 'ArrowRight') { nextSlide(); resetAuto(); }
+  if (e.key === 'ArrowLeft') { prevSlide(); resetAuto(); }
 });
 
-// ====== 网格视图 ======
+// ====== 网格 ======
 function showGrid() {
   stopAuto();
   document.getElementById('gridView').style.display = 'block';
-  const c = document.getElementById('gridContainer');
-  c.innerHTML = paintings.map((p, i) =>
+  document.getElementById('gridContainer').innerHTML = paintings.map((p, i) =>
     `<div class="gp" onclick="openLightbox(${i})"><img src="${p.thumb}" alt="" loading="lazy"></div>`
   ).join('');
 }
-function hideGrid() {
-  document.getElementById('gridView').style.display = 'none';
-  startAuto();
-}
+function hideGrid() { document.getElementById('gridView').style.display = 'none'; startAuto(); }
 
-// ====== 全屏 ======
+// ====== 全屏（原图） ======
 function openLightbox(idx) {
   document.getElementById('lightbox').style.display = 'flex';
   document.getElementById('lb-img').src = paintings[idx].full;
 }
-function closeLightbox() {
-  document.getElementById('lightbox').style.display = 'none';
-}
+function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     if (document.getElementById('lightbox').style.display === 'flex') closeLightbox();
@@ -315,12 +236,5 @@ function toggleMusic() {
   }
 }
 </script>
-
-<style>
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-</style>
 </body>
 </html>
