@@ -73,7 +73,7 @@ body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-seri
   <h1>周贤的画</h1>
   <input type="password" id="pw" placeholder="密码" maxlength="6" autofocus>
   <button onclick="unlock()">进入</button>
-  <p class="hint">一间安静的画室</p>
+  <p class="hint" id="pwHint">一间安静的画室</p>
 </div>
 
 <!-- 画廊（幻灯片模式） -->
@@ -138,7 +138,13 @@ function unlock() {
     setTimeout(() => toggleMusic(), 600);
   } else {
     document.getElementById('pw').style.borderColor = '#c97878';
-    setTimeout(() => document.getElementById('pw').style.borderColor = '#d4c8b8', 600);
+    document.getElementById('pwHint').textContent = '密码不对，再试一次';
+    document.getElementById('pwHint').style.color = '#c97878';
+    setTimeout(() => {
+      document.getElementById('pw').style.borderColor = '#d4c8b8';
+      document.getElementById('pwHint').textContent = '一间安静的画室';
+      document.getElementById('pwHint').style.color = '#b5a794';
+    }, 2000);
   }
 }
 document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
