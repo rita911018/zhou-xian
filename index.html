@@ -24,7 +24,7 @@ body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-seri
 #gallery header p { font-size:0.85rem; color:#b5a794; margin-top:0.3rem; }
 
 .toolbar { text-align:right; margin-bottom:1rem; }
-.toolbar button { border:1px solid #d4c8b8; background:#fffdf9; color:#8b7e6a; padding:8px 18px; border-radius:6px; font-size:0.85rem; cursor:pointer; }
+.toolbar button { border:1px solid #d4c8b8; background:#fffdf9; color:#8b7e6a; padding:8px 14px; border-radius:6px; font-size:1.1rem; cursor:pointer; line-height:1; }
 .toolbar button:active { background:#f0ebe0; }
 
 .paintings { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:0.8rem; }
@@ -58,6 +58,11 @@ footer { text-align:center; padding:2.5rem 0 1.5rem; color:#c5b8a4; font-size:0.
 @media (min-width:900px) {
   .paintings { grid-template-columns:repeat(4,1fr); }
 }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
 </style>
 </head>
 <body>
@@ -78,7 +83,11 @@ footer { text-align:center; padding:2.5rem 0 1.5rem; color:#c5b8a4; font-size:0.
   </header>
   <div class="toolbar">
     <button onclick="toggleUpload()">＋</button>
-    <button id="musicBtn" onclick="toggleMusic()" style="margin-left:6px;">🔇</button>
+    <button id="musicBtn" onclick="toggleMusic()" style="margin-left:6px;" title="音乐">
+      <svg id="musicIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b7e6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;">
+        <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+      </svg>
+    </button>
   </div>
   <div class="paintings" id="container"></div>
 
@@ -299,7 +308,8 @@ function toggleMusic() {
     
     musicNodes = { gain, oscs, bass };
     musicOn = true;
-    btn.textContent = '🔈';
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b8e6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+    btn.style.animation = 'pulse 3s ease-in-out infinite';
   } else {
     if (musicNodes) {
       const now = audioCtx.currentTime;
@@ -311,7 +321,8 @@ function toggleMusic() {
       }, 600);
     }
     musicOn = false;
-    btn.textContent = '🔇';
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b7e6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+    btn.style.animation = '';
   }
 }
 </script>
