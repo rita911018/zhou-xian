@@ -6,10 +6,11 @@
 <title>周贤的画</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; background:#faf8f5; color:#3d3d3d; -webkit-tap-highlight-color:transparent; }
+body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; background:#faf8f5; color:#3d3d3d; -webkit-tap-highlight-color:transparent; overflow:hidden; }
 
 /* 密码门 */
 #gate { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; min-height:100dvh; padding:2rem; }
+#gate img.portrait { width:100px; height:auto; border-radius:50%; margin-bottom:1.5rem; opacity:0.85; }
 #gate h1 { font-size:clamp(1.5rem,4vw,2rem); font-weight:400; color:#8b7e6a; margin-bottom:2rem; letter-spacing:4px; }
 #gate input { border:1px solid #d4c8b8; border-radius:8px; padding:14px 20px; font-size:1.1rem; width:220px; text-align:center; outline:none; background:#fffdf9; color:#5a4e3c; letter-spacing:6px; -webkit-appearance:none; }
 #gate input:focus { border-color:#b8a48e; }
@@ -17,51 +18,35 @@ body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-seri
 #gate button:active { background:#6d6252; }
 #gate .hint { margin-top:1.5rem; font-size:0.85rem; color:#b5a794; }
 
-/* 画册 */
-#gallery { display:none; padding:1.5rem; max-width:1100px; margin:0 auto; }
-#gallery header { text-align:center; margin-bottom:2rem; }
-#gallery header h1 { font-size:clamp(1.4rem,4vw,1.8rem); font-weight:400; color:#8b7e6a; letter-spacing:6px; }
-#gallery header p { font-size:0.85rem; color:#b5a794; margin-top:0.3rem; }
+/* 画廊 */
+#gallery { display:none; position:fixed; top:0; left:0; width:100%; height:100%; height:100dvh; background:#faf8f5; }
+#gallery .header { position:absolute; top:0; left:0; right:0; z-index:10; text-align:center; padding:1rem 1rem 0; pointer-events:none; }
+#gallery .header h1 { font-size:1.2rem; font-weight:400; color:#8b7e6a; letter-spacing:4px; }
 
-.toolbar { text-align:right; margin-bottom:1rem; }
-.toolbar button { border:1px solid #d4c8b8; background:#fffdf9; color:#8b7e6a; padding:8px 14px; border-radius:6px; font-size:1.1rem; cursor:pointer; line-height:1; }
-.toolbar button:active { background:#f0ebe0; }
+/* 翻页区 */
+.slides { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+.slide { position:absolute; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:60px 20px 100px; opacity:0; transition:opacity 0.35s ease; pointer-events:none; }
+.slide.active { opacity:1; pointer-events:auto; }
+.slide img { max-width:100%; max-height:70vh; max-height:70dvh; object-fit:contain; border-radius:6px; box-shadow:0 4px 24px rgba(0,0,0,0.08); cursor:pointer; }
+.slide .page-num { position:absolute; bottom:80px; left:0; right:0; text-align:center; font-size:0.85rem; color:#b5a794; letter-spacing:2px; }
 
-.paintings { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:0.8rem; }
-.painting { background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.03); cursor:pointer; }
-.painting:active { transform:scale(0.98); }
-.painting img { width:100%; display:block; aspect-ratio:4/3; object-fit:cover; }
+/* 底部 */
+.bottom-bar { position:absolute; bottom:0; left:0; right:0; height:64px; display:flex; align-items:center; justify-content:center; gap:1rem; padding:0 1rem; z-index:10; }
+.bottom-bar button { border:1px solid #d4c8b8; background:#fffdf9; color:#8b7e6a; padding:6px 12px; border-radius:20px; font-size:0.85rem; cursor:pointer; line-height:1; }
+.bottom-bar button:active { background:#f0ebe0; }
+.bottom-bar .dots { display:flex; gap:4px; }
+.bottom-bar .dot { width:6px; height:6px; border-radius:50%; background:#d4c8b8; transition:all 0.3s; }
+.bottom-bar .dot.active { background:#8b7e6a; width:16px; border-radius:3px; }
 
-/* 弹窗 */
-#lightbox { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.92); z-index:999; align-items:center; justify-content:center; flex-direction:column; }
-#lightbox img { max-width:95vw; max-height:80vh; border-radius:4px; }
+#musicPlayer { display:none; }
+
+/* 全屏弹窗 */
+#lightbox { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.94); z-index:999; align-items:center; justify-content:center; flex-direction:column; }
+#lightbox img { max-width:96vw; max-height:88vh; border-radius:4px; }
 #lightbox .close { position:absolute; top:16px;right:24px; color:#ccc; font-size:2rem; cursor:pointer; z-index:1000; }
-#lightbox .nav { position:absolute; top:50%; transform:translateY(-50%); color:#ccc; font-size:2.5rem; cursor:pointer; padding:16px; user-select:none; }
-#lightbox .prev { left:8px; }
-#lightbox .next { right:8px; }
-#lightbox .counter { color:#888; font-size:0.85rem; margin-top:0.8rem; }
 
-/* 上传区 */
-#upload-zone { display:none; margin-top:2rem; padding:1.5rem; background:#fffdf9; border-radius:10px; border:1px dashed #d4c8b8; text-align:center; }
-#upload-zone input[type=file] { display:none; }
-#upload-zone label { display:inline-block; background:#8b7e6a; color:#fff; padding:10px 28px; border-radius:8px; font-size:0.95rem; cursor:pointer; }
-#upload-zone label:active { background:#6d6252; }
-#upload-zone .status { margin-top:1rem; font-size:0.85rem; color:#b5a794; }
-
-footer { text-align:center; padding:2.5rem 0 1.5rem; color:#c5b8a4; font-size:0.8rem; }
-
-@media (max-width:600px) {
-  .paintings { grid-template-columns:repeat(2,1fr); gap:0.5rem; }
-  #gallery { padding:1rem; }
-  .painting { border-radius:8px; }
-}
-@media (min-width:900px) {
-  .paintings { grid-template-columns:repeat(4,1fr); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+@media (min-width:768px) {
+  .slide img { max-height:75vh; max-width:60vw; }
 }
 </style>
 </head>
@@ -69,50 +54,36 @@ footer { text-align:center; padding:2.5rem 0 1.5rem; color:#c5b8a4; font-size:0.
 
 <!-- 密码门 -->
 <div id="gate">
-  <img src="portrait-sketch.png" alt="" style="width:120px; height:auto; border-radius:50%; margin-bottom:1.5rem; opacity:0.85;">
+  <img class="portrait" src="portrait-sketch.png" alt="">
   <h1>周贤的画</h1>
   <input type="password" id="pw" placeholder="密码" maxlength="6" autofocus>
   <button onclick="unlock()">进入</button>
   <p class="hint">一间安静的画室</p>
 </div>
 
-<!-- 画册 -->
+<!-- 画廊 -->
 <div id="gallery">
-  <header>
-    <h1>周贤的画</h1>
-    <p>画在，人在，时光在。</p>
-  </header>
-  <div class="toolbar">
-    <button onclick="toggleUpload()">＋</button>
-    <button id="musicBtn" onclick="toggleMusic()" style="margin-left:6px;" title="音乐">
-      <svg id="musicIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b7e6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;">
+  <div class="header"><h1>周贤的画</h1></div>
+  <div class="slides" id="slides"></div>
+  <div class="bottom-bar">
+    <button onclick="prevSlide()">◂</button>
+    <div class="dots" id="dots"></div>
+    <button onclick="nextSlide()">▸</button>
+    <button id="musicBtn" onclick="toggleMusic()" title="音乐" style="margin-left:4px; width:32px; height:32px; border-radius:50%; padding:0; display:flex; align-items:center; justify-content:center; font-size:1rem;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b7e6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
       </svg>
     </button>
   </div>
-  <div class="paintings" id="container"></div>
-
-  <!-- 上传区 -->
-  <div id="upload-zone">
-    <p style="color:#8b7e6a;margin-bottom:1rem;">添加新画</p>
-    <input type="file" id="fileInput" accept="image/*" onchange="uploadPainting()">
-    <label for="fileInput">选择照片</label>
-    <p class="status" id="uploadStatus"></p>
+  <div id="musicPlayer">
+    <audio id="bgm" src="music.mp3" loop></audio>
   </div>
-
-  <div id="musicPlayer" style="display:none; max-width:320px; margin:1rem auto 0;">
-    <audio id="bgm" src="music.mp3" controls loop style="width:100%; height:36px; border-radius:6px;"></audio>
-  </div>
-  <footer>— 一间安静的画室 —</footer>
 </div>
 
 <!-- 弹窗 -->
-<div id="lightbox" onclick="closeLightbox(event)">
-  <span class="close" onclick="closeLightbox()">&times;</span>
-  <span class="nav prev" onclick="event.stopPropagation();navLightbox(-1)">‹</span>
-  <span class="nav next" onclick="event.stopPropagation();navLightbox(1)">›</span>
-  <img id="lb-img" src="" alt="" onclick="event.stopPropagation()">
-  <p class="counter" id="lb-counter"></p>
+<div id="lightbox" onclick="closeLightbox()">
+  <span class="close">&times;</span>
+  <img id="lb-img" src="" alt="">
 </div>
 
 <script>
@@ -121,6 +92,8 @@ const REPO = 'rita911018/zhou-xian';
 const BRANCH = 'gh-pages';
 let currentIdx = 0;
 let paintings = [];
+let musicOn = false;
+let touchStartX = 0, touchStartY = 0;
 
 // ====== 密码 ======
 function unlock() {
@@ -129,7 +102,6 @@ function unlock() {
     document.getElementById('gallery').style.display = 'block';
     sessionStorage.setItem('zx_unlocked', '1');
     loadPaintings();
-    // 密码输入是用户交互，趁现在起音乐
     setTimeout(() => toggleMusic(), 600);
   } else {
     document.getElementById('pw').style.borderColor = '#c97878';
@@ -151,153 +123,102 @@ async function loadPaintings() {
     if (!resp.ok) { loadStaticFallback(); return; }
     const files = await resp.json();
     paintings = files.filter(f => f.name.match(/\.(png|jpg|jpeg|webp)$/i)).sort((a,b) => b.name.localeCompare(a.name));
-    renderPaintings();
+    renderGallery();
   } catch(e) {
     loadStaticFallback();
   }
 }
 
 function loadStaticFallback() {
-  // 20 幅画作为兜底
   const imgs = [];
   for (let i = 20; i >= 1; i--) imgs.push({ name: `${String(i).padStart(2,'0')}.png`, download_url: `images/${String(i).padStart(2,'0')}.png` });
   paintings = imgs;
-  renderPaintings();
+  renderGallery();
 }
 
-function renderPaintings() {
-  const c = document.getElementById('container');
-  c.innerHTML = paintings.map((p, i) => 
-    `<div class="painting" onclick="openLightbox(${i})"><img src="${p.download_url || p.name}" alt="" loading="lazy"></div>`
+function renderGallery() {
+  const slides = document.getElementById('slides');
+  const dots = document.getElementById('dots');
+  slides.innerHTML = paintings.map((p, i) => 
+    `<div class="slide${i === 0 ? ' active' : ''}" data-idx="${i}" onclick="openLightbox(${i}, event)">
+      <img src="${p.download_url || p.name}" alt="" loading="${i < 3 ? 'eager' : 'lazy'}">
+      <div class="page-num">${i + 1} / ${paintings.length}</div>
+    </div>`
   ).join('');
+  dots.innerHTML = paintings.map((_, i) => 
+    `<div class="dot${i === 0 ? ' active' : ''}"></div>`
+  ).join('');
+  currentIdx = 0;
 }
 
-// ====== 弹窗 ======
-function openLightbox(idx) {
+// ====== 翻页 ======
+function goSlide(idx) {
+  if (idx < 0 || idx >= paintings.length) return;
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.slide[data-idx="${idx}"]`).classList.add('active');
+  document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.dot')[idx].classList.add('active');
   currentIdx = idx;
-  const lb = document.getElementById('lightbox');
-  lb.style.display = 'flex';
-  updateLightbox();
-  document.body.style.overflow = 'hidden';
 }
-function updateLightbox() {
-  document.getElementById('lb-img').src = paintings[currentIdx].download_url || paintings[currentIdx].name;
-  document.getElementById('lb-counter').textContent = `${currentIdx + 1} / ${paintings.length}`;
-}
-function navLightbox(dir) {
-  currentIdx = (currentIdx + dir + paintings.length) % paintings.length;
-  updateLightbox();
-}
-function closeLightbox(e) {
-  if (e && e.target !== document.getElementById('lightbox') && e.target.className === 'close') {}
-  document.getElementById('lightbox').style.display = 'none';
-  document.body.style.overflow = '';
-}
+function nextSlide() { goSlide((currentIdx + 1) % paintings.length); }
+function prevSlide() { goSlide((currentIdx - 1 + paintings.length) % paintings.length); }
+
+// 触摸滑动
+document.addEventListener('DOMContentLoaded', () => {
+  const gallery = document.getElementById('gallery');
+  gallery.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; });
+  gallery.addEventListener('touchend', e => {
+    const dx = touchStartX - e.changedTouches[0].clientX;
+    const dy = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      dx > 0 ? nextSlide() : prevSlide();
+    }
+  });
+});
+// 键盘翻页
 document.addEventListener('keydown', e => {
-  if (document.getElementById('lightbox').style.display === 'flex') {
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') navLightbox(-1);
-    if (e.key === 'ArrowRight') navLightbox(1);
+  if (document.getElementById('lightbox').style.display !== 'flex') {
+    if (e.key === 'ArrowRight') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
   }
 });
 
-// ====== 上传 ======
-function toggleUpload() {
-  const zone = document.getElementById('upload-zone');
-  zone.style.display = zone.style.display === 'none' ? 'block' : 'none';
+// ====== 全屏 ======
+function openLightbox(idx, e) {
+  if (e) e.stopPropagation();
+  document.getElementById('lightbox').style.display = 'flex';
+  document.getElementById('lb-img').src = paintings[idx].download_url || paintings[idx].name;
 }
-
-async function uploadPainting() {
-  const file = document.getElementById('fileInput').files[0];
-  if (!file) return;
-  
-  const status = document.getElementById('uploadStatus');
-  status.textContent = '上传中...';
-  
-  try {
-    // 转 base64
-    const reader = new FileReader();
-    reader.onload = async function() {
-      const base64 = reader.result.split(',')[1];
-      const ts = new Date().toISOString().slice(0,10).replace(/-/g,'');
-      const filename = `images/${ts}-${Date.now().toString(36)}.png`;
-      
-      const token = 'TOKEN_PLACEHOLDER'; // 需要替换为 GitHub token
-      
-      // 先获取当前所有画作列表
-      const listResp = await fetch(`https://api.github.com/repos/${REPO}/contents/images?ref=${BRANCH}`, {
-        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
-      });
-      
-      let htmlResp = await fetch(`https://api.github.com/repos/${REPO}/contents/index.html?ref=${BRANCH}`, {
-        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
-      });
-      let htmlData = await htmlResp.json();
-      let htmlContent = atob(htmlData.content);
-      let htmlSha = htmlData.sha;
-      
-      // 上传图片
-      const imgResp = await fetch(`https://api.github.com/repos/${REPO}/contents/${filename}`, {
-        method: 'PUT',
-        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `添加画作 ${filename}`, content: base64, branch: BRANCH })
-      });
-      
-      if (imgResp.ok) {
-        // 更新 HTML 中的画作列表
-        const newEntry = `\n    <div class="painting" onclick="openLightbox('${filename}')\\"><img src="${filename}" alt="">\\u003C/div>`;
-        htmlContent = htmlContent.replace('</div>\n  <footer>', `${newEntry}\n  </div>\n  <footer>`);
-        
-        await fetch(`https://api.github.com/repos/${REPO}/contents/index.html`, {
-          method: 'PUT',
-          headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: `更新画廊 ${filename}`, content: btoa(unescape(encodeURIComponent(htmlContent))), sha: htmlSha, branch: BRANCH })
-        });
-        
-        status.textContent = '上传成功！刷新页面查看。';
-        status.style.color = '#6b8e6a';
-        setTimeout(() => location.reload(), 2000);
-      } else {
-        const err = await imgResp.json();
-        status.textContent = '上传失败：' + (err.message || '未知错误');
-        status.style.color = '#c97878';
-      }
-    };
-    reader.readAsDataURL(file);
-  } catch(e) {
-    status.textContent = '出错了：' + e.message;
-    status.style.color = '#c97878';
-  }
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
 }
-
-// ====== 触摸滑动弹窗 ======
-let touchStartX = 0;
-document.getElementById('lightbox').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
-document.getElementById('lightbox').addEventListener('touchend', e => {
-  const diff = touchStartX - e.changedTouches[0].clientX;
-  if (Math.abs(diff) > 60) navLightbox(diff > 0 ? 1 : -1);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('lightbox').style.display === 'flex') closeLightbox();
 });
 
 // ====== 音乐 ======
-let musicOn = false;
 function toggleMusic() {
   const btn = document.getElementById('musicBtn');
-  const player = document.getElementById('musicPlayer');
   const audio = document.getElementById('bgm');
   if (!musicOn) {
-    player.style.display = 'block';
     audio.play().catch(() => {});
     musicOn = true;
-    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b8e6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b8e6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
     btn.style.animation = 'pulse 3s ease-in-out infinite';
   } else {
     audio.pause();
-    player.style.display = 'none';
     musicOn = false;
-    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b7e6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b7e6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
     btn.style.animation = '';
   }
 }
 </script>
+
+<style>
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+</style>
 </body>
 </html>
