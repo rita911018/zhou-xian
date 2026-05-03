@@ -157,9 +157,9 @@ async function loadPaintings() {
 }
 
 function loadStaticFallback() {
-  // 18 幅画作为兜底
+  // 19 幅画作为兜底
   const imgs = [];
-  for (let i = 18; i >= 1; i--) imgs.push({ name: `${String(i).padStart(2,'0')}.png`, download_url: `images/${String(i).padStart(2,'0')}.png` });
+  for (let i = 19; i >= 1; i--) imgs.push({ name: `${String(i).padStart(2,'0')}.png`, download_url: `images/${String(i).padStart(2,'0')}.png` });
   paintings = imgs;
   renderPaintings();
 }
