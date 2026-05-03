@@ -128,6 +128,8 @@ function unlock() {
     document.getElementById('gallery').style.display = 'block';
     sessionStorage.setItem('zx_unlocked', '1');
     loadPaintings();
+    // 密码输入是用户交互，趁现在起音乐
+    setTimeout(() => toggleMusic(), 600);
   } else {
     document.getElementById('pw').style.borderColor = '#c97878';
     setTimeout(() => document.getElementById('pw').style.borderColor = '#d4c8b8', 600);
@@ -138,6 +140,7 @@ if (sessionStorage.getItem('zx_unlocked') === '1') {
   document.getElementById('gate').style.display = 'none';
   document.getElementById('gallery').style.display = 'block';
   loadPaintings();
+  setTimeout(() => toggleMusic(), 800);
 }
 
 // ====== 加载画作 ======
