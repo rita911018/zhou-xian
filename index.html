@@ -3,184 +3,212 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200&display=swap" rel="stylesheet">
 <title>周贤的画室</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; background:#faf8f5; color:#3d3d3d; -webkit-tap-highlight-color:transparent; overflow:hidden; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#faf8f5;color:#3d3d3d;-webkit-tap-highlight-color:transparent;overflow:hidden}
 
-#gate { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; min-height:100dvh; padding:2rem; }
-#gate img.portrait { width:100px; height:auto; border-radius:50%; margin-bottom:1.5rem; opacity:0.85; }
-#gate h1 { font-size:clamp(1.8rem,5vw,2.4rem); font-weight:200; font-family:'Noto Serif SC','PingFang SC',serif; color:#8b7e6a; margin-bottom:2rem; letter-spacing:6px; }
-#gate input { border:1px solid #d4c8b8; border-radius:8px; padding:14px 20px; font-size:1.1rem; width:220px; text-align:center; outline:none; background:#fffdf9; color:#5a4e3c; letter-spacing:6px; -webkit-appearance:none; }
-#gate input:focus { border-color:#b8a48e; }
-#gate button { margin-top:1rem; border:none; background:#8b7e6a; color:#fff; padding:12px 36px; border-radius:8px; font-size:1rem; cursor:pointer; letter-spacing:2px; -webkit-appearance:none; }
-#gate button:active { background:#6d6252; }
+#gate{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:2rem}
+#gate img.portrait{width:100px;height:auto;border-radius:50%;margin-bottom:1.5rem;opacity:.85}
+#gate h1{font-size:clamp(1.8rem,5vw,2.4rem);font-weight:200;font-family:'Noto Serif SC','PingFang SC',serif;color:#8b7e6a;margin-bottom:2rem;letter-spacing:6px}
+#gate input{border:1px solid #d4c8b8;border-radius:8px;padding:14px 20px;font-size:1.1rem;width:220px;text-align:center;outline:none;background:#fffdf9;color:#5a4e3c;letter-spacing:6px;-webkit-appearance:none}
+#gate input:focus{border-color:#b8a48e}
+#gate button{margin-top:1rem;border:none;background:#8b7e6a;color:#fff;padding:12px 36px;border-radius:8px;font-size:1rem;cursor:pointer;letter-spacing:2px;-webkit-appearance:none}
+#gate button:active{background:#6d6252}
+#gate .hint{margin-top:1.5rem;font-size:.85rem;color:#b5a794;min-height:1.2em}
 
-#gallery { display:none; position:fixed; top:0; left:0; width:100%; height:100%; height:100dvh; background:#faf8f5; }
-#gallery .header { position:absolute; top:0; left:0; right:0; z-index:10; text-align:center; padding:1rem 1rem 0; pointer-events:none; }
-#gallery .header h1 { font-size:1.2rem; font-weight:200; font-family:'Noto Serif SC','PingFang SC',serif; color:#8b7e6a; letter-spacing:6px; }
+#gallery{display:none;position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;background:#faf8f5}
+#gallery .header{position:absolute;top:0;left:0;right:0;z-index:10;text-align:center;padding:1rem 1rem 0;pointer-events:none}
+#gallery .header h1{font-size:1.2rem;font-weight:200;font-family:'Noto Serif SC','PingFang SC',serif;color:#8b7e6a;letter-spacing:6px}
 
-.slides { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
-.slide { position:absolute; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:50px 16px calc(70px + env(safe-area-inset-bottom,0px)); opacity:0; transition:opacity 1s cubic-bezier(0.25,0.1,0.25,1); pointer-events:none; }
-.slide.active { opacity:1; pointer-events:auto; }
-.slide img { max-width:100%; max-height:68vh; max-height:68dvh; object-fit:contain; border-radius:6px; box-shadow:0 4px 24px rgba(0,0,0,0.08); }
-.slide .page-num { position:absolute; bottom:60px; left:0; right:0; text-align:center; font-size:0.75rem; color:#b5a794; letter-spacing:2px; }
+.slides{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.slide{position:absolute;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:50px 16px calc(70px + env(safe-area-inset-bottom,0px));opacity:0;transition:opacity 1s cubic-bezier(.25,.1,.25,1);pointer-events:none}
+.slide.active{opacity:1;pointer-events:auto}
+.slide img{max-width:100%;max-height:68vh;max-height:68dvh;object-fit:contain;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.slide .page-num{position:absolute;bottom:60px;left:0;right:0;text-align:center;font-size:.75rem;color:#b5a794;letter-spacing:2px}
 
-.pause-indicator { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#8b7e6a; font-size:2rem; opacity:0; transition:opacity 0.3s; pointer-events:none; z-index:5; }
-.pause-indicator.show { opacity:0.6; }
+.pause-indicator{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#8b7e6a;font-size:2rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:5}
+.pause-indicator.show{opacity:.6}
 
-.bottom-bar { position:absolute; bottom:0; left:0; right:0; height:64px; display:flex; align-items:center; justify-content:center; gap:6px; padding:0 8px 0; padding-bottom:env(safe-area-inset-bottom,0); z-index:10; background:rgba(250,248,245,0.95); backdrop-filter:blur(8px); }
-.bottom-bar button { border:1px solid #d4c8b8; background:#fffdf9; color:#8b7e6a; padding:5px 10px; border-radius:16px; font-size:0.75rem; cursor:pointer; line-height:1; white-space:nowrap; flex-shrink:0; }
-.bottom-bar button:active { background:#f0ebe0; }
-.bottom-bar .dots { display:flex; gap:3px; align-items:center; overflow-x:auto; max-width:140px; }
-.bottom-bar .dot { width:5px; height:5px; border-radius:50%; background:#d4c8b8; transition:all 0.3s; flex-shrink:0; }
-.bottom-bar .dot.active { background:#8b7e6a; width:14px; border-radius:3px; }
-.bottom-bar .spacer { flex:0 0 auto; width:8px; }
+.bottom-bar{position:absolute;bottom:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 8px;padding-bottom:env(safe-area-inset-bottom,0);z-index:10;background:rgba(250,248,245,.95);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.bottom-bar button{border:1px solid #d4c8b8;background:#fffdf9;color:#8b7e6a;padding:5px 10px;border-radius:16px;font-size:.75rem;cursor:pointer;line-height:1;white-space:nowrap;flex-shrink:0}
+.bottom-bar button:active{background:#f0ebe0}
+.bottom-bar .dots{display:flex;gap:3px;align-items:center;overflow-x:auto;max-width:140px}
+.bottom-bar .dot{width:5px;height:5px;border-radius:50%;background:#d4c8b8;transition:all .3s;flex-shrink:0}
+.bottom-bar .dot.active{background:#8b7e6a;width:14px;border-radius:3px}
+.bottom-bar .spacer{flex:0 0 auto;width:8px}
 
-#musicBtn { width:30px; height:30px; border-radius:50% !important; padding:0 !important; display:flex; align-items:center; justify-content:center; }
+#musicBtn{width:30px;height:30px;border-radius:50%!important;padding:0!important;display:flex;align-items:center;justify-content:center}
 
-#gridView { display:none; position:fixed; top:0;left:0;width:100%;height:100%;height:100dvh;background:#faf8f5;z-index:20;overflow-y:auto;padding:1rem; }
-#gridView .grid-header { display:flex; align-items:center; justify-content:space-between; padding:0.5rem 0 1rem; }
-#gridView .grid-header h1 { font-size:1.2rem; font-weight:200; font-family:'Noto Serif SC','PingFang SC',serif; color:#8b7e6a; letter-spacing:6px; }
-#gridView .grid-header button { border:1px solid #d4c8b8; background:#fffdf9; color:#8b7e6a; padding:6px 14px; border-radius:20px; font-size:0.8rem; cursor:pointer; }
-.grid-paintings { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:0.6rem; padding-bottom:2rem; }
-.grid-paintings .gp { background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.03); cursor:pointer; }
-.grid-paintings .gp img { width:100%; display:block; aspect-ratio:4/3; object-fit:cover; }
+#gridView{display:none;position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;background:#faf8f5;z-index:20;overflow-y:auto;padding:1rem}
+#gridView .grid-header{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0 1rem}
+#gridView .grid-header h1{font-size:1.2rem;font-weight:200;font-family:'Noto Serif SC','PingFang SC',serif;color:#8b7e6a;letter-spacing:6px}
+#gridView .grid-header button{border:1px solid #d4c8b8;background:#fffdf9;color:#8b7e6a;padding:6px 14px;border-radius:20px;font-size:.8rem;cursor:pointer}
+.grid-paintings{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem;padding-bottom:2rem}
+.grid-paintings .gp{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.03);cursor:pointer}
+.grid-paintings .gp:active{transform:scale(.97)}
+.grid-paintings .gp img{width:100%;display:block;aspect-ratio:4/3;object-fit:cover}
 
-@media (min-width:600px) { .grid-paintings { grid-template-columns:repeat(4,1fr); } }
+#lightbox{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.94);z-index:999;align-items:center;justify-content:center}
+#lightbox img{max-width:96vw;max-height:88vh;border-radius:4px}
+#lightbox .lb-close{position:absolute;top:16px;right:24px;color:#ccc;font-size:2rem;cursor:pointer;z-index:1000}
 
-#lightbox { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.94); z-index:999; align-items:center; justify-content:center; flex-direction:column; }
-#lightbox img { max-width:96vw; max-height:88vh; border-radius:4px; }
-#lightbox .lb-close { position:absolute; top:16px;right:24px; color:#ccc; font-size:2rem; cursor:pointer; z-index:1000; }
+@media(min-width:600px){.grid-paintings{grid-template-columns:repeat(4,1fr)}.slide img{max-height:75vh;max-width:60vw}}
 
-@keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:0.5; } }
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 </style>
 </head>
 <body>
 
 <div id="gate">
-  <img class="portrait" src="portrait-avatar.png?v=2" alt="">
+  <img class="portrait" src="portrait-avatar.png" alt="">
   <h1>周贤的画室</h1>
   <input type="password" id="pw" placeholder="密码" maxlength="6" autofocus>
   <button onclick="unlock()">进入</button>
+  <p class="hint" id="pwHint"></p>
 </div>
 
 <div id="gallery">
   <div class="header"><h1>周贤的画室</h1></div>
   <div class="slides" id="slides"><div class="pause-indicator" id="pauseIcon">⏸</div></div>
   <div class="bottom-bar">
-    <button onclick="prevSlide();resetAuto()">◂</button>
+    <button onclick="prev();resetAuto()">◂</button>
     <div class="dots" id="dots"></div>
-    <button onclick="nextSlide();resetAuto()">▸</button>
+    <button onclick="next();resetAuto()">▸</button>
     <span class="spacer"></span>
-    <button id="musicBtn" onclick="toggleMusic()">
+    <button id="musicBtn" onclick="toggleMusic()" title="音乐">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b5a794" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
-        <line x1="2" y1="2" x2="22" y2="22"/>
+        <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><line x1="2" y1="2" x2="22" y2="22"/>
       </svg>
     </button>
     <button onclick="showGrid()">查看全部</button>
   </div>
-  <audio id="bgm" src="music.mp3" loop preload="none"></audio>
+  <audio id="bgm" src="music.mp3" loop></audio>
 </div>
 
 <div id="gridView">
-  <div class="grid-header">
-    <h1>周贤的画室</h1>
-    <button onclick="hideGrid()">← 返回画廊</button>
-  </div>
+  <div class="grid-header"><h1>周贤的画室</h1><button onclick="hideGrid()">← 返回画廊</button></div>
   <div class="grid-paintings" id="gridContainer"></div>
 </div>
 
-<div id="lightbox" onclick="closeLightbox()">
+<div id="lightbox" onclick="closeLb()">
   <span class="lb-close">&times;</span>
   <img id="lb-img" src="" alt="">
 </div>
 
 <script>
-const CORRECT='0603', COUNT=36;
-let idx=0, paintings=[], musicOn=0, autoTimer=null, autoPaused=0, lastManual=0;
+const PW='0603', TOTAL=36;
+let idx=0, imgs=[], musicOn=0, autoTimer=null, autoPaused=0, lastManual=0;
 const AUTO_INT=6000, RESUME_DELAY=2000;
 
+// ====== 密码 ======
 function unlock(){
   const pw=document.getElementById('pw');
-  if(pw.value===CORRECT){
+  if(pw.value===PW){
     document.getElementById('gate').style.display='none';
     document.getElementById('gallery').style.display='block';
-    sessionStorage.setItem('zx','1');
-    load(); setTimeout(toggleMusic,600);
+    sessionStorage.setItem('zx_u','1');
+    load();
+    setTimeout(toggleMusic,600);
   }else{
     pw.style.borderColor='#c97878';
-    setTimeout(()=>pw.style.borderColor='#d4c8b8',2000);
+    const h=document.getElementById('pwHint');
+    h.textContent='密码不对，再试一次'; h.style.color='#c97878';
+    setTimeout(()=>{pw.style.borderColor='#d4c8b8';h.textContent='';h.style.color='#b5a794'},2000);
   }
 }
 document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')unlock()});
-if(sessionStorage.getItem('zx')==='1'){
+if(sessionStorage.getItem('zx_u')==='1'){
   document.getElementById('gate').style.display='none';
   document.getElementById('gallery').style.display='block';
   load(); setTimeout(toggleMusic,800);
 }
 
+// ====== 加载 ======
 function load(){
-  paintings=[];
-  for(let i=COUNT;i>=1;i--)paintings.push({t:`thumbs/${String(i).padStart(2,'0')}.jpg`,f:`images/${String(i).padStart(2,'0')}.png`});
+  // Thumbnails first (fast), full-res for lightbox
+  for(let i=TOTAL;i>=1;i--){
+    imgs.push({t:'thumbs/'+String(i).padStart(2,'0')+'.jpg', f:'images/'+String(i).padStart(2,'0')+'.png'});
+  }
   render();
 }
 
 function render(){
-  const s=document.getElementById('slides'), d=document.getElementById('dots');
-  const pi=s.querySelector('.pause-indicator'); s.innerHTML=''; s.appendChild(pi);
-  paintings.forEach((p,i)=>{
+  const slides=document.getElementById('slides');
+  const pauseIcon=slides.querySelector('.pause-indicator');
+  slides.innerHTML=''; slides.appendChild(pauseIcon);
+  const dots=document.getElementById('dots');
+  imgs.forEach((p,i)=>{
     const div=document.createElement('div');
-    div.className=`slide${i===0?' active':''}`;
+    div.className='slide'+(i===0?' active':'');
     div.setAttribute('data-idx',i);
-    div.innerHTML=`<img src="${p.t}" alt="" loading="${i<3?'eager':'lazy'}"><div class="page-num">${i+1}/${COUNT}</div>`;
+    div.innerHTML='<img src="'+p.t+'" alt="" loading="'+(i<3?'eager':'lazy')+'"><div class="page-num">'+(i+1)+' / '+TOTAL+'</div>';
     div.addEventListener('click',e=>togglePause(e));
-    s.appendChild(div);
+    slides.appendChild(div);
   });
-  d.innerHTML=paintings.map((_,i)=>`<div class="dot${i===0?' active':''}"></div>`).join('');
+  dots.innerHTML=imgs.map((_,i)=>'<div class="dot'+(i===0?' active':'')+'"></div>').join('');
   idx=0; startAuto();
 }
 
-function go(i){if(i<0||i>=COUNT)return;document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.slide')[i].classList.add('active');document.querySelectorAll('.dot').forEach(d=>d.classList.remove('active'));document.querySelectorAll('.dot')[i].classList.add('active');idx=i;}
-function next(){go((idx+1)%COUNT)} function prev(){go((idx-1+COUNT)%COUNT)}
+// ====== 翻页 ======
+function go(i){if(i<0||i>=TOTAL)return;document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.slide')[i].classList.add('active');document.querySelectorAll('.dot').forEach(d=>d.classList.remove('active'));document.querySelectorAll('.dot')[i].classList.add('active');idx=i}
+function next(){go((idx+1)%TOTAL)}
+function prev(){go((idx-1+TOTAL)%TOTAL)}
+
+// ====== 自动 ======
 function startAuto(){clearInterval(autoTimer);autoTimer=setInterval(()=>{if(!autoPaused)next()},AUTO_INT)}
 function togglePause(e){if(e)e.stopPropagation();autoPaused=!autoPaused;document.getElementById('pauseIcon').classList.toggle('show',autoPaused);lastManual=Date.now();if(!autoPaused)checkResume()}
 function resetAuto(){lastManual=Date.now();if(!autoPaused){clearInterval(autoTimer);startAuto()}else checkResume()}
 function checkResume(){if(!autoPaused)return;if(Date.now()-lastManual>=RESUME_DELAY){autoPaused=0;document.getElementById('pauseIcon').classList.remove('show')}else setTimeout(checkResume,500)}
 
+// ====== 触摸/键盘 ======
 document.addEventListener('DOMContentLoaded',()=>{
   const g=document.getElementById('gallery');
   let sx=0,sy=0;
   g.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY});
   g.addEventListener('touchend',e=>{
     const dx=sx-e.changedTouches[0].clientX, dy=sy-e.changedTouches[0].clientY;
-    if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>40){dx>0?next():prev();resetAuto();checkResume()}
+    if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>40){dx>0?next():prev();resetAuto()}
   });
 });
 document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'){next();resetAuto();checkResume()}
-  if(e.key==='ArrowLeft'){prev();resetAuto();checkResume()}
-  if(e.key==='Escape'){if(document.getElementById('lightbox').style.display==='flex')closeLightbox();if(document.getElementById('gridView').style.display==='block')hideGrid()}
+  if(document.getElementById('lightbox').style.display==='flex')return;
+  if(document.getElementById('gridView').style.display==='block')return;
+  if(e.key==='ArrowRight'){next();resetAuto()}
+  if(e.key==='ArrowLeft'){prev();resetAuto()}
+  if(e.key==='Escape'){
+    if(document.getElementById('gridView').style.display==='block')hideGrid();
+  }
 });
 
+// ====== 网格 ======
 function showGrid(){
   clearInterval(autoTimer);
   document.getElementById('gridView').style.display='block';
-  document.getElementById('gridContainer').innerHTML=paintings.map((p,i)=>
-    `<div class="gp" onclick="openLb(${i})"><img src="${p.t}" alt="" loading="lazy"></div>`
+  document.getElementById('gridContainer').innerHTML=imgs.map((p,i)=>
+    '<div class="gp" onclick="openLb('+i+')"><img src="'+p.t+'" alt="" loading="lazy"></div>'
   ).join('');
 }
 function hideGrid(){document.getElementById('gridView').style.display='none';startAuto()}
 
-function openLb(i){document.getElementById('lightbox').style.display='flex';document.getElementById('lb-img').src=paintings[i].f}
-function closeLightbox(){document.getElementById('lightbox').style.display='none'}
+// ====== 全屏 ======
+function openLb(i){document.getElementById('lightbox').style.display='flex';document.getElementById('lb-img').src=imgs[i].f}
+function closeLb(){document.getElementById('lightbox').style.display='none'}
 
+// ====== 音乐 ======
 function toggleMusic(){
-  const b=document.getElementById('musicBtn'),a=document.getElementById('bgm');
-  if(!musicOn){a.volume=0.35;a.play().catch(()=>{});musicOn=1;b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b8e6a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';b.style.animation='pulse 3s ease-in-out infinite'}
-  else{a.pause();musicOn=0;b.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b5a794" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><line x1="2" y1="2" x2="22" y2="22"/></svg>';b.style.animation=''}
+  const btn=document.getElementById('musicBtn'), a=document.getElementById('bgm');
+  if(!musicOn){
+    a.volume=.35; a.play().catch(()=>{});
+    musicOn=1;
+    btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b8e6a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
+    btn.style.animation='pulse 3s ease-in-out infinite';
+  }else{
+    a.pause(); musicOn=0;
+    btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b5a794" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><line x1="2" y1="2" x2="22" y2="22"/></svg>';
+    btn.style.animation='';
+  }
 }
 </script>
 </body>
