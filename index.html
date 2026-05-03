@@ -24,8 +24,8 @@ body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-seri
 #gallery .header h1 { font-size:1.2rem; font-weight:400; color:#8b7e6a; letter-spacing:4px; }
 
 .slides { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
-.slide { position:absolute; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:50px 16px calc(70px + env(safe-area-inset-bottom, 0px)); opacity:0; transform:scale(0.96); transition:opacity 0.5s ease, transform 0.5s ease; pointer-events:none; }
-.slide.active { opacity:1; transform:scale(1); pointer-events:auto; }
+.slide { position:absolute; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:50px 16px calc(70px + env(safe-area-inset-bottom, 0px)); opacity:0; transition:opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1); pointer-events:none; }
+.slide.active { opacity:1; pointer-events:auto; }
 .slide img { max-width:100%; max-height:68vh; max-height:68dvh; object-fit:contain; border-radius:6px; box-shadow:0 4px 24px rgba(0,0,0,0.08); }
 .slide .page-num { position:absolute; bottom:60px; left:0; right:0; text-align:center; font-size:0.75rem; color:#b5a794; letter-spacing:2px; }
 
@@ -95,9 +95,6 @@ body { font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-seri
     <button onclick="showGrid()">查看全部</button>
   </div>
   <div id="musicPlayer"><audio id="bgm" src="music.mp3" loop></audio></div>
-  <div id="volumeCtrl" style="display:none; position:absolute; bottom:70px; right:16px; z-index:11;">
-    <input type="range" id="volSlider" min="0" max="100" value="40" style="width:80px; accent-color:#8b7e6a;" oninput="document.getElementById('bgm').volume = this.value/100">
-  </div>
 </div>
 
 <!-- 网格视图 -->
@@ -306,18 +303,15 @@ document.addEventListener('keydown', e => {
 function toggleMusic() {
   const btn = document.getElementById('musicBtn');
   const audio = document.getElementById('bgm');
-  const vol = document.getElementById('volumeCtrl');
   if (!musicOn) {
-    audio.volume = 0.4;
+    audio.volume = 0.35;
     audio.play().catch(() => {});
     musicOn = true;
-    vol.style.display = 'block';
     btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6b8e6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
     btn.style.animation = 'pulse 3s ease-in-out infinite';
   } else {
     audio.pause();
     musicOn = false;
-    vol.style.display = 'none';
     btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8b7e6a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>';
     btn.style.animation = '';
   }
