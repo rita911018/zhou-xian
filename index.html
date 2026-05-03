@@ -141,9 +141,9 @@ async function loadPaintings() {
 }
 
 function loadStaticFallback() {
-  // 硬编码的 20 幅画作为兜底
+  // 18 幅画作为兜底
   const imgs = [];
-  for (let i = 20; i >= 1; i--) imgs.push({ name: `${String(i).padStart(2,'0')}.png`, download_url: `images/${String(i).padStart(2,'0')}.png` });
+  for (let i = 18; i >= 1; i--) imgs.push({ name: `${String(i).padStart(2,'0')}.png`, download_url: `images/${String(i).padStart(2,'0')}.png` });
   paintings = imgs;
   renderPaintings();
 }
