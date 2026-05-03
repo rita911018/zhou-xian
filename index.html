@@ -78,6 +78,7 @@ footer { text-align:center; padding:2.5rem 0 1.5rem; color:#c5b8a4; font-size:0.
   </header>
   <div class="toolbar">
     <button onclick="toggleUpload()">＋</button>
+    <button id="musicBtn" onclick="toggleMusic()" style="margin-left:6px;">🔇</button>
   </div>
   <div class="paintings" id="container"></div>
 
@@ -260,6 +261,59 @@ document.getElementById('lightbox').addEventListener('touchend', e => {
   const diff = touchStartX - e.changedTouches[0].clientX;
   if (Math.abs(diff) > 60) navLightbox(diff > 0 ? 1 : -1);
 });
+
+// ====== 环境音乐 ======
+let audioCtx = null, musicOn = false, musicNodes = null;
+function toggleMusic() {
+  const btn = document.getElementById('musicBtn');
+  if (!musicOn) {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // 柔和的环境音——低频和弦铺底
+    const now = audioCtx.currentTime;
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.06, now + 1.5);
+    gain.connect(audioCtx.destination);
+    
+    // C大七和弦 (C E G B) —— 温暖安静的色调
+    const freqs = [261.6, 329.6, 392.0, 493.9];
+    const oscs = freqs.map(f => {
+      const o = audioCtx.createOscillator();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(f, now);
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.03, now);
+      o.connect(g); g.connect(gain);
+      o.start(now);
+      return o;
+    });
+    
+    // 低频底音
+    const bass = audioCtx.createOscillator();
+    bass.type = 'sine';
+    bass.frequency.setValueAtTime(65.4, now); // C2
+    const bassGain = audioCtx.createGain();
+    bassGain.gain.setValueAtTime(0.02, now);
+    bass.connect(bassGain); bassGain.connect(gain);
+    bass.start(now);
+    
+    musicNodes = { gain, oscs, bass };
+    musicOn = true;
+    btn.textContent = '🔈';
+  } else {
+    if (musicNodes) {
+      const now = audioCtx.currentTime;
+      musicNodes.gain.gain.linearRampToValueAtTime(0, now + 0.5);
+      setTimeout(() => {
+        musicNodes.oscs.forEach(o => o.stop());
+        musicNodes.bass.stop();
+        musicNodes = null;
+      }, 600);
+    }
+    musicOn = false;
+    btn.textContent = '🔇';
+  }
+}
 </script>
 </body>
 </html>
