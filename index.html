@@ -156,23 +156,13 @@ if (sessionStorage.getItem('zx_unlocked') === '1') {
 }
 
 // ====== 加载画作 ======
-async function loadPaintings() {
-  try {
-    const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/images?ref=${BRANCH}&t=${Date.now()}`);
-    if (!resp.ok) throw new Error('API error');
-    const files = await resp.json();
-    paintings = files.filter(f => f.name.match(/\.(png|jpg|jpeg|webp)$/i)).sort((a,b) => b.name.localeCompare(a.name));
-  } catch(e) {
-    console.log('Falling back to static list');
-    loadStaticFallback();
-  }
-  if (!paintings.length) loadStaticFallback();
-  renderGallery();
-}
-
-function loadStaticFallback() {
+function loadPaintings() {
   paintings = [];
-  for (let i = 36; i >= 1; i--) paintings.push({ name: `${String(i).padStart(2,'0')}.png`, download_url: `images/${String(i).padStart(2,'0')}.png` });
+  for (let i = 36; i >= 1; i--) paintings.push({ 
+    thumb: `thumbs/${String(i).padStart(2,'0')}.jpg`, 
+    full: `images/${String(i).padStart(2,'0')}.png` 
+  });
+  renderGallery();
 }
 
 function renderGallery() {
@@ -186,7 +176,7 @@ function renderGallery() {
     const div = document.createElement('div');
     div.className = `slide${i === 0 ? ' active' : ''}`;
     div.setAttribute('data-idx', i);
-    div.innerHTML = `<img src="${p.download_url || p.name}" alt="" loading="${i < 3 ? 'eager' : 'lazy'}"><div class="page-num">${i + 1} / ${paintings.length}</div>`;
+    div.innerHTML = `<img src="${p.thumb}" alt="" loading="${i < 3 ? 'eager' : 'lazy'}"><div class="page-num">${i + 1} / ${paintings.length}</div>`;
     div.addEventListener('click', (e) => toggleAutoPause(e));
     slides.appendChild(div);
   });
@@ -284,7 +274,7 @@ function showGrid() {
   document.getElementById('gridView').style.display = 'block';
   const c = document.getElementById('gridContainer');
   c.innerHTML = paintings.map((p, i) =>
-    `<div class="gp" onclick="openLightbox(${i})"><img src="${p.download_url || p.name}" alt="" loading="lazy"></div>`
+    `<div class="gp" onclick="openLightbox(${i})"><img src="${p.thumb}" alt="" loading="lazy"></div>`
   ).join('');
 }
 function hideGrid() {
@@ -295,7 +285,7 @@ function hideGrid() {
 // ====== 全屏 ======
 function openLightbox(idx) {
   document.getElementById('lightbox').style.display = 'flex';
-  document.getElementById('lb-img').src = paintings[idx].download_url || paintings[idx].name;
+  document.getElementById('lb-img').src = paintings[idx].full;
 }
 function closeLightbox() {
   document.getElementById('lightbox').style.display = 'none';
