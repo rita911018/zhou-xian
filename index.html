@@ -66,10 +66,11 @@ body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;b
 
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
-/* ====== 祝福弹窗 ====== */
+/* ====== 祝福 ====== */
 #bless-bar{position:absolute;top:44px;right:8px;z-index:12;display:flex;gap:6px}
-#blessToggle,#blessBtn{border:1px solid #d4c8b8;background:rgba(255,253,249,.92);color:#8b7e6a;border-radius:14px;font-size:.7rem;cursor:pointer;padding:4px 10px;white-space:nowrap;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-#blessToggle:active,#blessBtn:active{background:#f0ebe0}
+#blessWallBtn,#blessBtn{border:1px solid #d4c8b8;background:rgba(255,253,249,.92);color:#8b7e6a;border-radius:14px;font-size:.7rem;cursor:pointer;padding:4px 10px;white-space:nowrap;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#blessWallBtn:active,#blessBtn:active{background:#f0ebe0}
+#blessTotal{color:#b58d67;margin-left:2px}
 
 
 #blessModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;background:rgba(0,0,0,.45);z-index:50;align-items:center;justify-content:center}
@@ -85,10 +86,23 @@ body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;b
 #blessBox .bless-btns .send{background:#8b7e6a;color:#fff;border-color:#8b7e6a}
 #blessBox .bless-btns .send:active{background:#6d6252}
 
-/* ====== 祝福弹幕 ====== */
-#blessTrack{position:absolute;top:82px;left:0;right:0;height:28px;overflow:hidden;pointer-events:none;z-index:9}
-.bless-msg{position:absolute;top:4px;white-space:nowrap;font-size:.8rem;color:#8b7e6a;background:rgba(255,253,249,.82);padding:2px 10px;border-radius:12px;border:1px solid #e8dfd2;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);animation:scrollLeft linear forwards}
-@keyframes scrollLeft{from{transform:translateX(100vw)}to{transform:translateX(-120%)}}
+#blessWall{display:none;position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;background:rgba(42,31,26,.42);z-index:55;align-items:center;justify-content:center;padding:64px 16px 24px}
+#blessWall.show{display:flex}
+#blessWallPanel{width:min(520px,92vw);max-height:min(680px,82dvh);background:#fffdf9;border:1px solid #e8dfd2;border-radius:16px;box-shadow:0 18px 48px rgba(58,43,35,.18);display:flex;flex-direction:column;overflow:hidden}
+#blessWallPanel header{padding:1.2rem 1.3rem .9rem;border-bottom:1px solid #eee4d6;text-align:center}
+#blessWallPanel h2{font-size:1.05rem;font-weight:300;font-family:'Noto Serif SC','PingFang SC',serif;color:#7c6f5e;letter-spacing:5px}
+#blessWallPanel p{margin-top:.4rem;font-size:.75rem;color:#b5a794;letter-spacing:1px}
+#blessList{overflow-y:auto;padding:.3rem 1.2rem .8rem}
+.bless-item{display:grid;grid-template-columns:34px 1fr;gap:.7rem;padding:1rem 0;border-bottom:1px solid #f0e8dc}
+.bless-item:last-child{border-bottom:0}
+.bless-mark{font-family:'Noto Serif SC','PingFang SC',serif;font-size:.85rem;color:#c3a177;text-align:right;padding-top:.05rem}
+.bless-text{font-size:.92rem;line-height:1.75;color:#5a4e3c;word-break:break-word}
+#blessEmpty{padding:2rem 1rem;text-align:center;color:#b5a794;font-size:.85rem;line-height:1.7}
+.bless-wall-foot{display:flex;justify-content:center;gap:.6rem;padding:.9rem 1rem 1rem;border-top:1px solid #eee4d6}
+.bless-wall-foot button{border:1px solid #d4c8b8;background:#fffdf9;color:#8b7e6a;padding:7px 16px;border-radius:18px;font-size:.8rem;cursor:pointer}
+.bless-wall-foot .primary{background:#8b7e6a;color:#fff;border-color:#8b7e6a}
+#blessToast{position:fixed;top:82px;left:50%;transform:translate(-50%,-8px);z-index:70;background:rgba(255,253,249,.96);border:1px solid #e8dfd2;border-radius:18px;color:#8b7e6a;font-size:.78rem;padding:7px 14px;box-shadow:0 8px 24px rgba(58,43,35,.10);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;white-space:nowrap}
+#blessToast.show{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
 <body>
@@ -108,10 +122,9 @@ body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;b
 <div id="gallery">
   <div class="header"><h1>周贤的画室</h1></div>
   <div id="bless-bar">
-    <button id="blessBtn" onclick="openBless()">🎂 送祝福</button>
-    <button id="blessToggle" onclick="toggleBlessTrack()">关闭弹幕</button>
+    <button id="blessBtn" onclick="openBless()">送祝福</button>
+    <button id="blessWallBtn" onclick="openBlessWall()">祝福墙 <span id="blessTotal">0</span></button>
   </div>
-  <div id="blessTrack"></div>
   <div class="slides" id="slides"><div class="pause-indicator" id="pauseIcon">⏸</div></div>
   <div class="bottom-bar">
     <button onclick="prev();resetAuto()">◂</button>
@@ -129,7 +142,7 @@ body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;b
 </div>
 
 <!-- 祝福弹窗 -->
-<div id="blessModal">
+<div id="blessModal" onclick="if(event.target===this)closeBless()">
   <div id="blessBox">
     <h2>送上你的祝福</h2>
     <textarea id="blessTxt" placeholder="写下你的祝福…" maxlength="50" oninput="updateCount()"></textarea>
@@ -142,6 +155,25 @@ body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;b
     </div>
   </div>
 </div>
+
+<!-- 祝福墙 -->
+<div id="blessWall" onclick="if(event.target===this)closeBlessWall()">
+  <div id="blessWallPanel">
+    <header>
+      <h2>生日祝福墙</h2>
+      <p>大家写给周贤的话，都收在这里。</p>
+    </header>
+    <div id="blessList">
+      <div id="blessEmpty">还在等第一句祝福。</div>
+    </div>
+    <div class="bless-wall-foot">
+      <button onclick="closeBlessWall()">返回画廊</button>
+      <button class="primary" onclick="closeBlessWall();openBless()">继续送祝福</button>
+    </div>
+  </div>
+</div>
+
+<div id="blessToast">祝福已送达，已收进祝福墙</div>
 
 <div id="gridView">
   <div class="grid-header"><h1>周贤的画室</h1><button onclick="hideGrid()">← 返回画廊</button></div>
@@ -224,6 +256,8 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'){next();resetAuto()}
   if(e.key==='ArrowLeft'){prev();resetAuto()}
   if(e.key==='Escape'){
+    if(document.getElementById('blessModal').classList.contains('show'))closeBless();
+    if(document.getElementById('blessWall').classList.contains('show'))closeBlessWall();
     if(document.getElementById('gridView').style.display==='block')hideGrid();
   }
 });
@@ -244,15 +278,7 @@ function closeLb(){document.getElementById('lightbox').style.display='none'}
 
 // ====== 祝福（云端版）======
 const API = 'https://cola-dispatch.marswave-543.workers.dev/app-0f8b76/api/blessings';
-let blessQueue=[], blessRunning=false, blessVisible=true, blessSent=[];
-
-function toggleBlessTrack(){
-  blessVisible=!blessVisible;
-  const t=document.getElementById('blessTrack');
-  const btn=document.getElementById('blessToggle');
-  t.style.opacity=blessVisible?'1':'0';
-  btn.textContent=blessVisible?'关闭弹幕':'打开弹幕';
-}
+let blessings=[], blessingsLoaded=false, blessToastTimer=null;
 
 function openBless(){
   document.getElementById('blessModal').classList.add('show');
@@ -265,12 +291,13 @@ function updateCount(){document.getElementById('blessLen').textContent=document.
 
 async function sendBless(){
   const txt=document.getElementById('blessTxt').value.trim();
-  if(!txt)return;
+  const clean=cleanBlessingText(txt);
+  if(!clean)return;
   closeBless();
-  // 先本地展示，再异步提交
-  queueBless(txt);
+  addBlessing(clean,true);
+  showBlessToast();
   try{
-    await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:txt})});
+    await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:clean})});
   }catch(e){}
 }
 
@@ -279,36 +306,67 @@ async function loadBlessings(){
     const r=await fetch(API);
     const data=await r.json();
     if(data.ok && data.blessings && data.blessings.length){
-      // 反转为时间正序
       const list=data.blessings.slice().reverse();
-      list.forEach(b=>{
-        if(!blessSent.includes(b.text)){blessSent.push(b.text);blessQueue.push(b.text);}
-      });
-      if(!blessRunning)runBless();
+      list.forEach(b=>addBlessing(b.text,false));
     }
+    blessingsLoaded=true;
   }catch(e){}
 }
 
-function queueBless(txt){
-  blessQueue.push(txt);
-  if(!blessRunning)runBless();
+function addBlessing(txt,toTop){
+  txt=cleanBlessingText(txt);
+  if(!txt || blessings.some(b=>b.text===txt))return false;
+  const item={text:txt};
+  toTop?blessings.unshift(item):blessings.push(item);
+  updateBlessCount();
+  renderBlessWall();
+  return true;
 }
 
-function runBless(){
-  if(!blessQueue.length){
-    if(blessSent.length)blessQueue.push(...blessSent);
-    else{blessRunning=false;return;}
+function cleanBlessingText(txt){
+  return (txt||'').trim().replace(/^hi[\s,，:：、.。!！-]*/i,'').trim();
+}
+
+function updateBlessCount(){
+  const el=document.getElementById('blessTotal');
+  if(el)el.textContent=String(blessings.length);
+}
+
+function renderBlessWall(){
+  const list=document.getElementById('blessList');
+  if(!list)return;
+  if(!blessings.length){
+    list.innerHTML='<div id="blessEmpty">还在等第一句祝福。</div>';
+    return;
   }
-  blessRunning=true;
-  const txt=blessQueue.shift();
-  if(!blessSent.includes(txt))blessSent.push(txt);
-  const el=document.createElement('div');
-  el.className='bless-msg';
-  el.textContent='🌸 '+txt;
-  const dur=Math.max(8,6+txt.length*0.15);
-  el.style.animationDuration=dur+'s';
-  document.getElementById('blessTrack').appendChild(el);
-  el.addEventListener('animationend',()=>{el.remove();runBless();});
+  list.innerHTML='';
+  blessings.forEach((b,i)=>{
+    const item=document.createElement('div');
+    const mark=document.createElement('div');
+    const text=document.createElement('div');
+    item.className='bless-item';
+    mark.className='bless-mark';
+    text.className='bless-text';
+    mark.textContent=String(i+1).padStart(2,'0');
+    text.textContent=b.text;
+    item.appendChild(mark);
+    item.appendChild(text);
+    list.appendChild(item);
+  });
+}
+
+function openBlessWall(){
+  document.getElementById('blessWall').classList.add('show');
+  renderBlessWall();
+  if(!blessingsLoaded)loadBlessings();
+}
+function closeBlessWall(){document.getElementById('blessWall').classList.remove('show');}
+
+function showBlessToast(){
+  const toast=document.getElementById('blessToast');
+  toast.classList.add('show');
+  clearTimeout(blessToastTimer);
+  blessToastTimer=setTimeout(()=>toast.classList.remove('show'),2600);
 }
 
 // ====== 音乐 ======
