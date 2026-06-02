@@ -166,7 +166,7 @@ function enter(){
     const g=document.getElementById('gallery');
     g.style.display='block';
     requestAnimationFrame(()=>requestAnimationFrame(()=>g.style.opacity='1'));
-    load(); setTimeout(toggleMusic,800);
+    load(); setTimeout(toggleMusic,800); setTimeout(loadBlessings,1000);
   },2400);
 }
 
@@ -241,8 +241,10 @@ function hideGrid(){document.getElementById('gridView').style.display='none';sta
 function openLb(i){document.getElementById('lightbox').style.display='flex';document.getElementById('lb-img').src=imgs[i].f}
 function closeLb(){document.getElementById('lightbox').style.display='none'}
 
-// ====== 祝福 ======
-let blessQueue=[], blessRunning=false, blessVisible=true;
+// ====== 祝福（云端版）======
+const API = 'https://cola-dispatch.marswave-543.workers.dev/app-0f8b76/api/blessings';
+let blessQueue=[], blessRunning=false, blessVisible=true, blessSent=[];
+
 function toggleBlessTrack(){
   blessVisible=!blessVisible;
   const t=document.getElementById('blessTrack');
@@ -259,17 +261,40 @@ function openBless(){
 }
 function closeBless(){document.getElementById('blessModal').classList.remove('show');}
 function updateCount(){document.getElementById('blessLen').textContent=document.getElementById('blessTxt').value.length;}
-function sendBless(){
+
+async function sendBless(){
   const txt=document.getElementById('blessTxt').value.trim();
   if(!txt)return;
   closeBless();
+  // 先本地展示，再异步提交
+  queueBless(txt);
+  try{
+    await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:txt})});
+  }catch(e){}
+}
+
+async function loadBlessings(){
+  try{
+    const r=await fetch(API);
+    const data=await r.json();
+    if(data.ok && data.blessings && data.blessings.length){
+      // 反转为时间正序
+      const list=data.blessings.slice().reverse();
+      list.forEach(b=>{
+        if(!blessSent.includes(b.text)){blessSent.push(b.text);blessQueue.push(b.text);}
+      });
+      if(!blessRunning)runBless();
+    }
+  }catch(e){}
+}
+
+function queueBless(txt){
   blessQueue.push(txt);
   if(!blessRunning)runBless();
 }
-let blessSent=[];
+
 function runBless(){
   if(!blessQueue.length){
-    // 没有新的，如果已有历史祝福就循环播出
     if(blessSent.length)blessQueue.push(...blessSent);
     else{blessRunning=false;return;}
   }
@@ -279,7 +304,7 @@ function runBless(){
   const el=document.createElement('div');
   el.className='bless-msg';
   el.textContent='🌸 '+txt;
-  const dur=Math.max(8, 6+txt.length*0.15);
+  const dur=Math.max(8,6+txt.length*0.15);
   el.style.animationDuration=dur+'s';
   document.getElementById('blessTrack').appendChild(el);
   el.addEventListener('animationend',()=>{el.remove();runBless();});
