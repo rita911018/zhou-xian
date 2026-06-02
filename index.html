@@ -67,8 +67,7 @@ body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;b
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
 /* ====== 祝福弹窗 ====== */
-#bless-bar{position:absolute;top:8px;right:8px;z-index:12;display:flex;gap:6px;align-items:center}
-#blessToggle,#blessBtn{border:1px solid #d4c8b8;background:rgba(255,253,249,.9);color:#8b7e6a;border-radius:14px;font-size:.7rem;cursor:pointer;padding:5px 11px;white-space:nowrap;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#blessToggle,#blessBtn{border:1px solid #d4c8b8;background:#fffdf9;color:#8b7e6a;border-radius:16px;font-size:.75rem;cursor:pointer;padding:5px 10px;white-space:nowrap;line-height:1;flex-shrink:0}
 #blessToggle:active,#blessBtn:active{background:#f0ebe0}
 
 
@@ -107,10 +106,6 @@ body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;b
 
 <div id="gallery">
   <div class="header"><h1>周贤的画室</h1></div>
-  <div id="bless-bar">
-    <button id="blessBtn" onclick="openBless()">🎂 送祝福</button>
-    <button id="blessToggle" onclick="toggleBlessTrack()">关闭弹幕</button>
-  </div>
   <div id="blessTrack"></div>
   <div class="slides" id="slides"><div class="pause-indicator" id="pauseIcon">⏸</div></div>
   <div class="bottom-bar">
@@ -123,6 +118,8 @@ body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;b
         <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><line x1="2" y1="2" x2="22" y2="22"/>
       </svg>
     </button>
+    <button id="blessBtn" onclick="openBless()">🎂 送祝福</button>
+    <button id="blessToggle" onclick="toggleBlessTrack()">关闭弹幕</button>
     <button onclick="showGrid()">查看全部</button>
   </div>
   <audio id="bgm" src="music.mp3" loop preload="auto"></audio>
