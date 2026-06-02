@@ -9,16 +9,24 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#faf8f5;color:#3d3d3d;-webkit-tap-highlight-color:transparent;overflow:hidden}
 
-#gate{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:2rem}
-#gate img.portrait{width:100px;height:auto;border-radius:50%;margin-bottom:1.5rem;opacity:.85}
-#gate h1{font-size:clamp(1.8rem,5vw,2.4rem);font-weight:200;font-family:'Noto Serif SC','PingFang SC',serif;color:#8b7e6a;margin-bottom:2rem;letter-spacing:6px}
-#gate input{border:1px solid #d4c8b8;border-radius:8px;padding:14px 20px;font-size:1.1rem;width:220px;text-align:center;outline:none;background:#fffdf9;color:#5a4e3c;letter-spacing:6px;-webkit-appearance:none}
-#gate input:focus{border-color:#b8a48e}
-#gate button{margin-top:1rem;border:none;background:#8b7e6a;color:#fff;padding:12px 36px;border-radius:8px;font-size:1rem;cursor:pointer;letter-spacing:2px;-webkit-appearance:none}
-#gate button:active{background:#6d6252}
-#gate .hint{margin-top:1.5rem;font-size:.85rem;color:#b5a794;min-height:1.2em}
+#gate{position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;overflow:hidden;cursor:pointer;background:#2a1f1a}
+#gate .door-wrap{position:absolute;top:0;left:0;width:100%;height:100%;display:flex}
+#gate .door-l,#gate .door-r{width:50%;height:100%;background:linear-gradient(160deg,#5c4033 0%,#3d2b20 40%,#2a1f1a 100%);transition:transform 2.4s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+#gate .door-l::before,#gate .door-r::before{content:'';position:absolute;top:8%;bottom:8%;background:rgba(255,255,255,.04);border-radius:3px}
+#gate .door-l::before{left:10%;right:10%}
+#gate .door-r::before{left:10%;right:10%}
+#gate .door-l::after,#gate .door-r::after{content:'';position:absolute;top:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.4),transparent)}
+#gate .door-l::after{right:0}
+#gate .door-r::after{left:0}
+#gate.open .door-l{transform:perspective(800px) rotateY(-110deg);transform-origin:left center}
+#gate.open .door-r{transform:perspective(800px) rotateY(110deg);transform-origin:right center}
+#gate .gate-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;z-index:5}
+#gate .gate-center img{width:80px;height:auto;border-radius:50%;opacity:.75;margin-bottom:1.2rem;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+#gate .gate-center h1{font-size:clamp(1.4rem,4vw,2rem);font-weight:200;font-family:'Noto Serif SC','PingFang SC',serif;color:#d4c4a8;letter-spacing:8px;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+#gate .gate-hint{position:absolute;bottom:18%;left:50%;transform:translateX(-50%);font-size:.8rem;color:#8b7560;letter-spacing:4px;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
 
-#gallery{display:none;position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;background:#faf8f5}
+#gallery{display:none;position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;background:#faf8f5;opacity:0;transition:opacity 1.2s ease}
 #gallery .header{position:absolute;top:0;left:0;right:0;z-index:10;text-align:center;padding:1rem 1rem 0;pointer-events:none}
 #gallery .header h1{font-size:1.2rem;font-weight:200;font-family:'Noto Serif SC','PingFang SC',serif;color:#8b7e6a;letter-spacing:6px}
 
@@ -86,10 +94,16 @@ body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;b
 </head>
 <body>
 
-<div id="gate">
-  <img class="portrait" src="portrait-avatar.png" alt="">
-  <h1>周贤的画室</h1>
-  <button onclick="enter()">进入画室</button>
+<div id="gate" onclick="enter()">
+  <div class="door-wrap">
+    <div class="door-l"></div>
+    <div class="door-r"></div>
+  </div>
+  <div class="gate-center">
+    <img src="portrait-avatar.png" alt="">
+    <h1>周贤的画室</h1>
+  </div>
+  <div class="gate-hint">轻轻推门&nbsp;&middot;&nbsp;进入</div>
 </div>
 
 <div id="gallery">
@@ -144,9 +158,16 @@ let idx=0, imgs=[], musicOn=0, autoTimer=null, autoPaused=0, lastManual=0;
 const AUTO_INT=6000, RESUME_DELAY=2000;
 
 function enter(){
-  document.getElementById('gate').style.display='none';
-  document.getElementById('gallery').style.display='block';
-  load(); setTimeout(toggleMusic,600);
+  const gate=document.getElementById('gate');
+  if(gate.classList.contains('open'))return;
+  gate.classList.add('open');
+  setTimeout(()=>{
+    gate.style.display='none';
+    const g=document.getElementById('gallery');
+    g.style.display='block';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>g.style.opacity='1'));
+    load(); setTimeout(toggleMusic,800);
+  },2400);
 }
 
 // ====== 加载 ======
